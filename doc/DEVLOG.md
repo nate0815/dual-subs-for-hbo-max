@@ -233,7 +233,7 @@ code: []
 | 7 | Claude Code 的 Stop hook 用 `"command": "node"` ＋ `"args"` 的寫法是否真的會執行腳本 | 不認 `args` 的話 hook 只跑一個空的 `node`，收工檢查**靜默失效** | 待驗：只改 `src/` 不回填就收工，看會不會被擋 |
 | 8 | Codex 的 `${CODEX_PROJECT_DIR}` 變數是否存在 | 兩個 Codex hook 都依賴它，不存在就靜默失效 | 待驗（用 Codex 時），見 `.codex/config.toml` 檔頭 |
 | 9 | 不經商店的分享管道（私下給 zip、私人 repo 邀請等） | 決定別人怎麼安裝與更新 | 待決，見 DESIGN「待決事項」 |
-| 10 | HBO 控制列的 DOM 長什麼樣、用什麼選擇器嵌入最穩 | 語言按鈕嵌入的前提 | 待實機偵察（實作語言選單前） |
+| 10 | HBO 控制列的 DOM 長什麼樣、用什麼選擇器嵌入最穩 | 語言按鈕嵌入的前提 | **2026-11-11 結論**：錨點用 `button[data-testid="player-ux-track-selector-button"]`，其 `parentElement` 是右下群組；不用 class（同頁就有兩組雜湊），見 [同一頁有兩組控制列class雜湊不同](gotchas/2026-11-11-同一頁有兩組控制列class雜湊不同.md) 與當天 devlog |
 
 ---
 
