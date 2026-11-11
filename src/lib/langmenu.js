@@ -70,12 +70,14 @@
 
   /* ── DOM（只在瀏覽器裡呼叫） ─────────────────────────── */
 
-  // 兩條橫線，上黃下白 —— 跟疊加層兩排的顏色一致，一眼看得出是「雙字幕」
+  // 珊瑚紅實心圓＋白色「雙」字（DESIGN「按鈕外觀」）—— 刻意跟 HBO 的白色線條圖示不同，一眼找得到。
+  // 顏色、字級是假值。
+  const ICON_COLOR = '#ff5a4e'
   const ICON =
-    '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">' +
-    '<rect x="2" y="3" width="20" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/>' +
-    '<rect x="5.5" y="11" width="13" height="2.4" rx="1.2" fill="#ffe27a"/>' +
-    '<rect x="7.5" y="15.2" width="9" height="2.4" rx="1.2" fill="#ffffff"/></svg>'
+    '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">' +
+    '<circle cx="12" cy="12" r="11.5" fill="' + ICON_COLOR + '"/>' +
+    '<text x="12" y="12.5" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="900" fill="#fff" ' +
+    'font-family="&quot;Noto Sans TC&quot;,&quot;Microsoft JhengHei&quot;,&quot;PingFang TC&quot;,sans-serif">雙</text></svg>'
 
   const ROWS = [
     ['top', '上排（黃）'],
@@ -233,6 +235,7 @@
           height: '44px',
           borderRadius: '50%',
           background: 'rgba(0,0,0,0.55)',
+          margin: '0', // 嵌入時複製來的外距不能帶過來，否則會偏離 right/bottom 的定位
         })
       } else {
         Object.assign(button.style, {
@@ -372,6 +375,9 @@
           const h = anchor.offsetHeight + 'px'
           if (button.style.width !== w) button.style.width = w
           if (button.style.height !== h) button.style.height = h
+          // HBO 的按鈕四周有外距（實測 4px）；不複製的話我們的按鈕會比隔壁高、間距也不齊
+          const m = getComputedStyle(anchor).margin
+          if (button.style.margin !== m) button.style.margin = m
           if (button.style.display !== 'inline-flex') button.style.display = 'inline-flex'
         } else if (now - lastAnchorAt > FLOAT_AFTER_MS) {
           if (mode !== 'floating') setMode('floating')
