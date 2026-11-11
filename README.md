@@ -1,14 +1,14 @@
-# HBO Max 雙字幕（HboDualSub）
+# 雙字幕 for HBO Max（非官方）
 
 ## 這是什麼
 
-自用的 Chrome 擴充功能：在 HBO Max（台灣版）播放頁，同時顯示**官方英文 CC**（上排、黃色）與**官方繁體中文字幕**（下排、白色），方便邊看動畫邊練英文。不做機器翻譯，不碰 DRM，只讀文字字幕。
+非官方的 Chrome 擴充功能（與 HBO 無關）：在 HBO Max（台灣版）播放頁，同時顯示**官方英文 CC**（上排、黃色）與**官方繁體中文字幕**（下排、白色），方便邊看動畫邊練英文。不做機器翻譯，不碰 DRM，只讀文字字幕。
 
 ## 怎麼跑起來
 
 **只是要用**：照 [使用說明](USAGE.zh-TW.md)「安裝」的方法 A，用竄改猴點連結安裝（會自動更新）。以下是開發者的跑法。
 
-0. 取得原始碼：`git clone https://github.com/nate0815/HboDualSub.git`（沒有 build step、沒有相依套件，clone 下來就能載入）。
+0. 取得原始碼：`git clone https://github.com/nate0815/dual-subs-for-hbo-max.git`（沒有 build step、沒有相依套件，clone 下來就能載入）。
 1. 開 Chrome → 網址列輸入 `chrome://extensions` → 右上角開啟「開發人員模式」。
 2. 按「載入未封裝項目」→ 選這個資料夾（有 `manifest.json` 的那層）。
 3. 打開 HBO Max 任一集的播放頁（網址含 `/video/watch/`），把播放器的字幕設為「**關閉**」。

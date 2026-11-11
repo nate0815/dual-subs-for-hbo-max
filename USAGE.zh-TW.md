@@ -1,4 +1,4 @@
-# HBO Max 雙字幕 — 使用說明
+# 雙字幕 for HBO Max（非官方）— 使用說明
 
 [English](USAGE.en.md)
 
@@ -16,7 +16,7 @@
 
 1. 在 Chrome 安裝 [Tampermonkey（竄改猴）](https://www.tampermonkey.net/)。
 2. 到 `chrome://extensions`，打開竄改猴的「**詳細資料**」，開啟「**允許使用者指令碼**」（較新版 Chrome 才有這個開關；沒看到就略過）。
-3. 點這個連結：<https://github.com/nate0815/HboDualSub/releases/latest/download/hds.user.js>
+3. 點這個連結：<https://github.com/nate0815/dual-subs-for-hbo-max/releases/latest/download/hds.user.js>
 4. 竄改猴會跳出安裝頁，按「**安裝**」。
 
 之後有新版時，竄改猴會自動更新（也可以在竄改猴的管理頁按「檢查更新」）。

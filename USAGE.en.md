@@ -1,4 +1,4 @@
-# HBO Max Dual Subtitles — User Guide
+# Dual Subs for HBO Max (unofficial) — User Guide
 
 [繁體中文](USAGE.zh-TW.md)
 
@@ -16,7 +16,7 @@ Use **one** of the two methods, not both (otherwise you'll see two sets of subti
 
 1. Install [Tampermonkey](https://www.tampermonkey.net/) in Chrome.
 2. Open `chrome://extensions`, click **Details** on Tampermonkey, and turn on **Allow user scripts** (only newer Chrome versions have this switch; skip it if you don't see it).
-3. Open this link: <https://github.com/nate0815/HboDualSub/releases/latest/download/hds.user.js>
+3. Open this link: <https://github.com/nate0815/dual-subs-for-hbo-max/releases/latest/download/hds.user.js>
 4. Tampermonkey shows an install page. Click **Install**.
 
 When a new version is released, Tampermonkey updates it automatically (or click "Check for updates" in Tampermonkey's dashboard).

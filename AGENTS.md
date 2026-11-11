@@ -1,4 +1,4 @@
-# HBO Max 雙字幕（HboDualSub）— 給 AI 的工作守則
+# 雙字幕 for HBO Max（dual-subs-for-hbo-max）— 給 AI 的工作守則
 
 這份只放指標。規則本體在各自的正本裡，**不要在這裡複製一份**。
 
@@ -87,9 +87,9 @@ Chrome 擴充功能（Manifest V3）：在 HBO Max 播放頁同時顯示兩條**
 
 ## 6. 分支與發佈
 
-> 這一節是從 doc-system-kit 的範本裁剪來的：這個專案是自用的未封裝擴充功能，
-> **沒有試玩版、也還沒發佈過任何東西**，所以沒有 `stable`、`hotfix/*`、`demo/*`。
-> 之後真的需要（例如要上架或給別人用）再補，理由見
+> 這一節是從 doc-system-kit 的範本裁剪來的：這個專案是單人開發、以 tag ＋ GitHub Release 發佈的擴充功能，
+> **凍結的可用版本由 tag 承擔**，所以沒有 `stable`、`hotfix/*`、`demo/*`。
+> 之後真的需要（例如多人協作、要同時維護舊版）再補，理由見
 > [doc/decisions/2026-11-11-分支模型先不設stable與demo.md](doc/decisions/2026-11-11-分支模型先不設stable與demo.md)。
 > **沒有的線就是沒有的** —— 不要照範本把它們加回來。
 

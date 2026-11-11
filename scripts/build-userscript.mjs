@@ -19,7 +19,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 /** 發佈位置：最新一版 Release 的附件。竄改猴用它檢查與下載更新。 */
-export const RELEASE_URL = 'https://github.com/nate0815/HboDualSub/releases/latest/download/hds.user.js'
+export const RELEASE_URL = 'https://github.com/nate0815/dual-subs-for-hbo-max/releases/latest/download/hds.user.js'
 
 /** 純函式：manifest 物件 ＋ 讀檔函式 → userscript 全文。測試直接呼叫這支。 */
 export function buildUserscript(manifest, readFile) {
@@ -27,7 +27,7 @@ export function buildUserscript(manifest, readFile) {
   const header = [
     '// ==UserScript==',
     `// @name         ${manifest.name}`,
-    '// @namespace    https://github.com/nate0815/HboDualSub',
+    '// @namespace    https://github.com/nate0815/dual-subs-for-hbo-max',
     `// @version      ${manifest.version}`,
     `// @description  ${manifest.description}`,
     ...cs.matches.map((m) => `// @match        ${m}`),
@@ -37,7 +37,7 @@ export function buildUserscript(manifest, readFile) {
     `// @downloadURL  ${RELEASE_URL}`,
     '// ==/UserScript==',
     '',
-    '// 由 scripts/build-userscript.mjs 產生，請勿手改。原始碼：https://github.com/nate0815/HboDualSub',
+    '// 由 scripts/build-userscript.mjs 產生，請勿手改。原始碼：https://github.com/nate0815/dual-subs-for-hbo-max',
     '',
   ]
   const body = cs.js.map((file) => `// ---- ${file} ----\n${readFile(file).trimEnd()}\n`)

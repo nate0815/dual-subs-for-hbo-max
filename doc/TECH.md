@@ -1,4 +1,4 @@
-# HBO Max 雙字幕（HboDualSub）— 技術實作參考（TECH）
+# 雙字幕 for HBO Max（dual-subs-for-hbo-max）— 技術實作參考（TECH）
 
 > **定位**：**實際怎麼實作的** 的正本。**要改程式就看這份。**
 > 跟著程式改 —— 程式動了、這份沒動，就是欠回填。
