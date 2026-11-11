@@ -21,14 +21,14 @@ Use **one** of the two methods, not both (otherwise you'll see two sets of subti
 3. Open this link: <https://github.com/nate0815/dual-subs-for-hbo-max/releases/latest/download/hds.user.js>
 4. Tampermonkey shows an install page. Click **Install**.
 
-When a new version is released, Tampermonkey updates it automatically (or click "Check for updates" in Tampermonkey's dashboard).
+You install a single bundled script; you don't need anything else from the repo. When a new version is released, Tampermonkey updates it automatically (it checks about once a day by default, or click "Check for updates" in Tampermonkey's dashboard). It only updates when the author publishes a new release; everyday changes to the repo don't affect your installed script.
 
 ### Method B: Load unpacked
 
 1. Get this folder (`git clone`, or on the GitHub page click Code → "Download ZIP" and unzip it).
 2. Open `chrome://extensions` and turn on **Developer mode** (top right).
 3. Click **Load unpacked** and select this folder (the one containing `manifest.json`).
-4. To update: download again or `git pull`, then click reload on this extension in `chrome://extensions`.
+4. To update: download again or `git pull`, then click reload on this extension in `chrome://extensions`. This method does not update automatically.
 
 Neither method needs any permissions, and the tool collects or sends no data. Subtitles are processed only in your browser's memory.
 

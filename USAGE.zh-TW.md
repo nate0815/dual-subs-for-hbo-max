@@ -21,14 +21,14 @@
 3. 點這個連結：<https://github.com/nate0815/dual-subs-for-hbo-max/releases/latest/download/hds.user.js>
 4. 竄改猴會跳出安裝頁，按「**安裝**」。
 
-之後有新版時，竄改猴會自動更新（也可以在竄改猴的管理頁按「檢查更新」）。
+裝的是一個打包好的腳本檔，不需要下載 repo 的其他內容。之後有新版時，竄改猴會自動更新（預設約一天檢查一次；也可以在竄改猴的管理頁按「檢查更新」）。只有作者正式發佈新版時才會更新，repo 平常的修改不會影響你。
 
 ### 方法 B：載入未封裝項目
 
 1. 取得這個資料夾（`git clone`，或在 GitHub 頁面按 Code →「Download ZIP」後解壓縮）。
 2. Chrome 網址列輸入 `chrome://extensions`，右上角開啟「**開發人員模式**」。
 3. 按「**載入未封裝項目**」，選這個資料夾（有 `manifest.json` 的那一層）。
-4. 更新時：重新下載或 `git pull`，再到 `chrome://extensions` 按本工具的重新載入。
+4. 更新時：重新下載或 `git pull`，再到 `chrome://extensions` 按本工具的重新載入。這個方法不會自動更新。
 
 兩種方法都不需要任何權限，也不會收集或傳送任何資料。字幕只在你的瀏覽器記憶體裡處理。
 

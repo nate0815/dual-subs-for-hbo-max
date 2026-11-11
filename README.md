@@ -34,14 +34,16 @@
 3. 點這個連結：<https://github.com/nate0815/dual-subs-for-hbo-max/releases/latest/download/hds.user.js>
 4. 竄改猴會跳出安裝頁，按「**安裝**」。
 
-之後有新版時，竄改猴會自動更新。
+裝的是**一個打包好的腳本檔**，不需要下載這個 repo 的其他內容。
+
+**更新**：竄改猴會定期（預設約一天一次）檢查有沒有新版，有就自動更新；想馬上更新，可以在竄改猴的管理頁按「**檢查更新**」。只有作者**正式發佈新版**時才會更新，repo 平常的修改不會影響你已經裝好的腳本。
 
 ### 方法 B：載入未封裝項目
 
 1. 下載這個 repo（`git clone`，或在 GitHub 頁面按 Code →「Download ZIP」後解壓縮）。
 2. Chrome 網址列輸入 `chrome://extensions`，右上角開啟「**開發人員模式**」。
 3. 按「**載入未封裝項目**」，選這個資料夾（有 `manifest.json` 的那一層）。
-4. 更新時：重新下載或 `git pull`，再到 `chrome://extensions` 按本工具的重新載入。
+4. 更新時：重新下載或 `git pull`，再到 `chrome://extensions` 按本工具的重新載入。這個方法**不會自動更新**。
 
 ## 使用
 
@@ -80,6 +82,18 @@
 4. 確認解析邏輯沒壞：`npm test`（Node 18+）。
 5. 發佈新版（產生竄改猴腳本並附到 GitHub Release）：見 [AGENTS.md](AGENTS.md)「tag」。
 
+### 新版怎麼送到用戶手上
+
+竄改猴用戶的安裝與更新網址是 `releases/latest/download/hds.user.js` —— 指向**最新一個 GitHub Release 的附件**，不是 `main`。所以：
+
+| 做了什麼 | 用戶會不會更新 |
+|---|---|
+| PR 合回 `main` | **不會**。`main` 的變動不會傳到用戶那邊 |
+| 發 Release，但 `manifest.json` 的 `version` 沒升 | **不會，而且不報錯** —— 竄改猴比對 `@version`，一樣就當沒有新版 |
+| 升 `version` → 打 tag → `npm run build` → 發 Release 附上 `dist/hds.user.js` | **會**，在竄改猴下次檢查時（約一天內；用戶也可手動「檢查更新」） |
+
+附件檔名必須是 `hds.user.js`（網址寫死）。「方法 B」的用戶不會自動更新，要自己重新下載。
+
 ## 文件在哪
 
 - **使用說明**（含疑難排解，中英文）：[USAGE.zh-TW.md](USAGE.zh-TW.md)／[USAGE.en.md](USAGE.en.md)
@@ -91,7 +105,7 @@
 
 ## 現在到哪了
 
-v0.1.0 準備發佈。已在實機驗證（載入未封裝項目，Adventure Time）：兩行字幕、語言選單、快捷鍵、控制列讓位、選集面板隱藏、換集、全螢幕。Rick and Morty 能顯示兩行字幕，但它的集數分成多段，多分段支援已修正、**尚待實機驗證**。待辦見 [DEVLOG](doc/DEVLOG.md)「待決問題」。
+第一個正式版準備發佈，**還沒有任何 Release** —— 在那之前「方法 A」的連結會找不到檔案，請先用「方法 B」。已在實機驗證（載入未封裝項目，Adventure Time、Rick and Morty）：兩行字幕、語言選單（含多種語言與由右往左的文字）、快捷鍵、控制列讓位、選集面板隱藏、換集、全螢幕、分成多段的集數。待辦見 [DEVLOG](doc/DEVLOG.md)「待決問題」。
 
 ## 授權
 
