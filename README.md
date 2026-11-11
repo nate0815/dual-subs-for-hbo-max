@@ -23,6 +23,8 @@
 
 ## 文件在哪
 
+- **使用說明**（給使用者，中英文）：[USAGE.zh-TW.md](USAGE.zh-TW.md)／[USAGE.en.md](USAGE.en.md)
+
 - 規格：[doc/DESIGN.md](doc/DESIGN.md)
 - 技術選型與排除的路線：[doc/PLAN.md](doc/PLAN.md)
 - 實作細節與不變式（動程式前必讀）：[doc/TECH.md](doc/TECH.md)
