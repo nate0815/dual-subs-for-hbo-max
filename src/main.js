@@ -8,6 +8,7 @@
 
   const {
     parseVtt,
+    mergeCues,
     activeAt,
     isMpdUrl,
     parseTextTracks,
@@ -28,14 +29,20 @@
   const DEFAULTS = {
     enabled: true,
     top: ['en'], //              上排：英文（實測的軌是 en-US，role=caption，即「英文 CC」）
-    bottom: ['zh-hant', 'zh'], // 下排：繁中，找不到再退到任何中文
+    // 下排：台灣繁中優先（同一集常同時有 zh-Hant-HK 與 zh-Hant-TW，用語不同），再退任何繁中、任何中文
+    bottom: ['zh-hant-tw', 'zh-hant', 'zh'],
     fontScale: 1,
     offsetMs: 0, //              正值＝字幕提早出現
   }
 
+  /** 陣列＝「用預設值」，不該被存下來 —— 否則預設改了，存過設定的人永遠看不到新預設。 */
+  const isDefaultPref = (v) => Array.isArray(v)
+
   function loadSettings() {
     try {
-      return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) || '{}') }
+      const saved = JSON.parse(localStorage.getItem(KEY) || '{}')
+      for (const row of ['top', 'bottom']) if (isDefaultPref(saved[row])) delete saved[row] // 舊版存的預設陣列
+      return { ...DEFAULTS, ...saved }
     } catch {
       return { ...DEFAULTS }
     }
@@ -51,35 +58,43 @@
     bottomTrack: null,
     top: [], //       句子陣列
     bottom: [],
-    cache: new Map(), // 軌網址 → 句子陣列。只在記憶體、換集就清（TECH「不變式」：字幕不持久化）
+    cache: new Map(), // 軌的網址組（各段網址接起來）→ 句子陣列。只在記憶體、換集就清（TECH「不變式」：字幕不持久化）
     overlay: null,
     menu: null,
   }
 
   function saveSettings() {
     try {
-      localStorage.setItem(KEY, JSON.stringify(state.settings))
+      const out = { ...state.settings }
+      for (const row of ['top', 'bottom']) if (isDefaultPref(out[row])) delete out[row]
+      localStorage.setItem(KEY, JSON.stringify(out))
     } catch {
       /* 儲存失敗不該影響顯示 */
     }
   }
 
+  async function fetchOne(url) {
+    const res = await fetch(url)
+    if (!res.ok) throw new Error('HTTP ' + res.status)
+    return parseVtt(await res.text())
+  }
+
+  /** 抓一條軌的字幕。清單檔分多個 Period 時，track.urls 有每一段的字幕檔，全部抓來合併
+   *  （各段時間碼都是整集的絕對時間）。只讀第一段的話，後半集會沒有字幕（TECH「不變式」）。 */
   async function fetchCues(track) {
     if (!track) return []
-    if (state.cache.has(track.url)) return state.cache.get(track.url)
+    const urls = track.urls || [track.url]
+    const key = urls.join('\n')
+    if (state.cache.has(key)) return state.cache.get(key)
     if (track.segments > 1) {
-      console.warn(TAG, '這條字幕軌有多個分段，目前只讀第一段：', track.lang)
+      console.warn(TAG, '這條字幕軌在同一段內還有多個分段，目前每段只讀第一個：', track.lang)
     }
-    try {
-      const res = await fetch(track.url)
-      if (!res.ok) throw new Error('HTTP ' + res.status)
-      const cues = parseVtt(await res.text())
-      state.cache.set(track.url, cues)
-      return cues
-    } catch (err) {
-      console.warn(TAG, '抓字幕失敗：', track.lang, err)
-      return []
-    }
+    const results = await Promise.allSettled(urls.map(fetchOne))
+    const failed = results.filter((r) => r.status === 'rejected')
+    if (failed.length) console.warn(TAG, '抓字幕失敗：', track.lang, failed.length + '／' + urls.length + ' 段', failed[0].reason)
+    const cues = mergeCues(results.filter((r) => r.status === 'fulfilled').map((r) => r.value))
+    if (!failed.length) state.cache.set(key, cues) // 有段落失敗就不快取，下次重抓
+    return cues
   }
 
   /** 依目前設定挑上下兩條軌並抓字幕。換集與改選語言都走這裡。 */

@@ -57,6 +57,12 @@
     return cues.sort((a, b) => a.start - b.start)
   }
 
+  /** 把多個句子陣列（例如同一條軌在各 Period 的字幕檔）合併成一個，依開始時間排序。
+   *  各段時間碼本來就是整集的絕對時間，不需要平移。 */
+  function mergeCues(lists) {
+    return [].concat(...lists).sort((a, b) => a.start - b.start)
+  }
+
   /** 往回看幾筆。字幕可能重疊（上一句還沒結束、下一句已開始），
    *  二分搜尋只找得到「最後一個開始的」，所以要往前掃一小段補上重疊的。 */
   const LOOKBACK = 12
@@ -82,7 +88,7 @@
     return out.reverse()
   }
 
-  const api = { toSeconds, cleanText, parseVtt, activeAt }
+  const api = { toSeconds, cleanText, parseVtt, mergeCues, activeAt }
   if (typeof module !== 'undefined' && module.exports) module.exports = api
   else root.__HDS__ = Object.assign(root.__HDS__ || {}, api)
 })(typeof globalThis !== 'undefined' ? globalThis : this)

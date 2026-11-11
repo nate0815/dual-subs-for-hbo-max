@@ -83,7 +83,7 @@
 
 ## 現在到哪了
 
-**v0.1.0**（[Releases](https://github.com/nate0815/dual-subs-for-hbo-max/releases)）。已在實機驗證（載入未封裝項目）：兩行字幕、語言選單、快捷鍵、控制列讓位、選集面板隱藏、換集、全螢幕。只在 Adventure Time 驗證過，其他作品（例如 Rick and Morty）尚未驗證。待辦見 [DEVLOG](doc/DEVLOG.md)「待決問題」。
+v0.1.0 準備發佈。已在實機驗證（載入未封裝項目，Adventure Time）：兩行字幕、語言選單、快捷鍵、控制列讓位、選集面板隱藏、換集、全螢幕。Rick and Morty 能顯示兩行字幕，但它的集數分成多段，多分段支援已修正、**尚待實機驗證**。待辦見 [DEVLOG](doc/DEVLOG.md)「待決問題」。
 
 ## 授權
 

@@ -1,6 +1,6 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
-const { toSeconds, cleanText, parseVtt, activeAt } = require('../src/lib/vtt.js')
+const { toSeconds, cleanText, parseVtt, mergeCues, activeAt } = require('../src/lib/vtt.js')
 
 // 字幕內容都是自己編的，不放任何真實作品的台詞。
 const SAMPLE = [
@@ -54,4 +54,12 @@ test('activeAt：邊界與重疊', () => {
   assert.deepEqual(activeAt(cues, 3).map((c) => c.text), ['Second & third\nline two']) // 終點不含
   assert.deepEqual(activeAt(cues, 6), []) //                      空窗
   assert.deepEqual(activeAt([], 1), [])
+})
+
+test('mergeCues：各段字幕接起來並依開始時間排序（時間碼本來就是整集絕對時間，不平移）', () => {
+  const p1 = [{ start: 4, end: 6, text: 'a' }, { start: 700, end: 705, text: 'b' }]
+  const p3 = [{ start: 1160, end: 1162, text: 'd' }]
+  const p2 = [{ start: 731, end: 733, text: 'c' }]
+  assert.deepEqual(mergeCues([p1, p3, p2]).map((c) => c.start), [4, 700, 731, 1160])
+  assert.deepEqual(mergeCues([]), [])
 })

@@ -93,3 +93,41 @@ test('resolveTrack：null／壞掉的設定值＝關閉', () => {
   assert.equal(resolveTrack(tracks, { role: 'caption' }), null)
   assert.equal(resolveTrack(tracks, 'en'), null)
 })
+
+// 多 Period 的清單檔：結構照 2026-11-11 實測 Rick and Morty（一集 3 段、各段一個字幕檔、
+// SegmentTemplate 的 startNumber 依段遞增），網址與 id 都是編的。
+const textSet = (lang, role, n, pto) => `
+  <AdaptationSet lang="${lang}" contentType="text"><Role schemeIdUri="urn:mpeg:dash:role:2011" value="${role}"/>
+    <Representation mimeType="text/vtt" id="${lang}-${n}">
+      <SegmentTemplate media="t/${lang}/$Number$.vtt?a=1&amp;b=2" startNumber="${n}" timescale="1000"${pto ? ` presentationTimeOffset="${pto}"` : ''}>
+        <SegmentTimeline><S t="0" d="1000"/></SegmentTimeline>
+      </SegmentTemplate></Representation></AdaptationSet>`
+const period = (id, n, pto, langs) =>
+  `<Period id="${id}">${langs.map(([l, r]) => textSet(l, r, n, pto)).join('')}</Period>`
+const LANGS = [['zh-Hant-HK', 'subtitle'], ['zh-Hant-TW', 'subtitle'], ['en-US', 'caption']]
+const MULTI = `<?xml version="1.0"?><MPD>${period('0', 1, 0, LANGS)}${period('1', 2, 729228, LANGS)}${period('2', 3, 1158740, LANGS)}</MPD>`
+
+test('parseTextTracks：多個 Period 時，同語言同角色合併成一條軌，urls 依段排序', () => {
+  const tracks = parseTextTracks(MULTI, BASE)
+  assert.deepEqual(tracks.map((t) => t.lang), ['zh-Hant-HK', 'zh-Hant-TW', 'en-US']) // 不重複
+  const en = tracks.find((t) => t.lang === 'en-US')
+  assert.deepEqual(
+    en.urls.map((u) => new URL(u).pathname.split('/').slice(-1)[0]),
+    ['1.vtt', '2.vtt', '3.vtt']
+  )
+  assert.equal(en.url, en.urls[0])
+  assert.ok(en.urls.every((u) => u.endsWith('?a=1&b=2')), '每段網址都要還原 &amp; 並保留查詢字串')
+})
+
+test('parseTextTracks：只有一段時 urls 只有一個（Adventure Time 那種）', () => {
+  const [en] = parseTextTracks(MPD, BASE)
+  assert.deepEqual(en.urls, [en.url])
+})
+
+test('pickTrack：預設下排同時有香港與台灣繁中時挑台灣', () => {
+  const tracks = parseTextTracks(MULTI, BASE)
+  assert.equal(pickTrack(tracks, ['zh-hant-tw', 'zh-hant', 'zh']).lang, 'zh-Hant-TW')
+  // 只有香港繁中時退到它
+  const hkOnly = tracks.filter((t) => t.lang !== 'zh-Hant-TW')
+  assert.equal(pickTrack(hkOnly, ['zh-hant-tw', 'zh-hant', 'zh']).lang, 'zh-Hant-HK')
+})
