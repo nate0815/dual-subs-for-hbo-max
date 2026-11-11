@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img" aria-label="示意圖：播放器畫面下方顯示兩行字幕（上排黃色英文、下排白色中文），控制列右側的語言按鈕打開了語言選單">
+  <!-- 自製示意畫面：場景、台詞都是編的，不是 HBO 的截圖（DESIGN「商標與命名」：示意圖用自製假畫面）。 -->
+  <defs>
+    <clipPath id="frame"><rect width="1200" height="675" rx="14"/></clipPath>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b2448"/>
+      <stop offset="0.55" stop-color="#6a4f86"/>
+      <stop offset="1" stop-color="#e9a06c"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.85"/>
+    </linearGradient>
+    <style>
+      .t { font-family: "Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif; }
+      .sub { font-weight: 600; text-anchor: middle; stroke: #000; stroke-width: 6px; stroke-linejoin: round; paint-order: stroke; }
+      .opt { font-size: 15px; fill: rgba(255,255,255,0.72); }
+      .on { fill: #fff; font-weight: 700; }
+      .hint { font-size: 12.5px; fill: rgba(255,255,255,0.6); }
+      .ico { fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+      .badge circle { fill: #ffe27a; stroke: #000; stroke-width: 2; }
+      .badge text { font-size: 15px; font-weight: 800; fill: #000; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <g clip-path="url(#frame)">
+    <!-- 假場景：黃昏的山丘 -->
+    <rect width="1200" height="675" fill="url(#sky)"/>
+    <g fill="#fff" opacity="0.7">
+      <circle cx="120" cy="70" r="1.6"/><circle cx="260" cy="40" r="1.2"/><circle cx="410" cy="95" r="1.4"/>
+      <circle cx="560" cy="55" r="1.1"/><circle cx="720" cy="80" r="1.5"/><circle cx="880" cy="35" r="1.2"/>
+      <circle cx="1010" cy="90" r="1.4"/><circle cx="1130" cy="50" r="1.1"/>
+    </g>
+    <circle cx="330" cy="400" r="78" fill="#ffd28a" opacity="0.9"/>
+    <path d="M0 430 C 180 360 320 380 470 420 S 760 360 920 400 S 1120 380 1200 395 L1200 675 L0 675 Z" fill="#4a3566"/>
+    <path d="M0 500 C 220 450 420 470 620 500 S 980 450 1200 480 L1200 675 L0 675 Z" fill="#2e2244"/>
+    <g fill="#1d1630">
+      <rect x="168" y="452" width="8" height="40"/>
+      <path d="M172 400 L196 456 L148 456 Z"/>
+      <path d="M172 382 L190 428 L154 428 Z"/>
+    </g>
+
+    <!-- 示意圖標記 -->
+    <rect x="20" y="18" width="226" height="30" rx="15" fill="#000" opacity="0.45"/>
+    <text class="t" x="133" y="38" font-size="14" fill="#fff" text-anchor="middle">示意圖（自製畫面，非截圖）</text>
+
+    <!-- 控制列 -->
+    <rect y="560" width="1200" height="115" fill="url(#bar)"/>
+    <rect x="30" y="600" width="1140" height="4" rx="2" fill="#fff" opacity="0.3"/>
+    <rect x="30" y="600" width="430" height="4" rx="2" fill="#fff"/>
+    <circle cx="460" cy="602" r="7" fill="#fff"/>
+    <!-- 左：播放、倒轉、快轉、時間 -->
+    <path d="M38 625 L58 640 L38 655 Z" fill="#fff"/>
+    <g class="ico">
+      <path d="M98 632 a10 10 0 1 0 6 -4"/><path d="M104 622 l0 7 l-7 0"/>
+      <path d="M152 632 a10 10 0 1 1 -6 -4"/><path d="M146 622 l0 7 l7 0"/>
+    </g>
+    <text class="t" x="185" y="646" font-size="15" fill="#fff" opacity="0.85">12:34 / 22:10</text>
+    <!-- 右：音量、本工具的語言按鈕、字幕設定、全螢幕 -->
+    <g class="ico">
+      <path d="M988 634 h6 l8 -7 v26 l-8 -7 h-6 Z" fill="#fff" stroke="none"/>
+      <path d="M1008 633 a8 8 0 0 1 0 14"/>
+    </g>
+    <g transform="translate(1036 626)">
+      <rect x="2" y="1" width="26" height="26" rx="4" fill="none" stroke="#fff" stroke-width="2.2"/>
+      <rect x="6.5" y="12" width="17" height="3.2" rx="1.6" fill="#ffe27a"/>
+      <rect x="9" y="18" width="12" height="3.2" rx="1.6" fill="#fff"/>
+    </g>
+    <g class="ico">
+      <rect x="1088" y="628" width="26" height="22" rx="4"/>
+      <path d="M1094 641 h8 M1106 641 h3 M1094 645 h4 M1101 645 h8"/>
+    </g>
+    <g class="ico">
+      <path d="M1140 634 v-6 h7 M1160 628 h7 v6 M1167 646 v6 h-7 M1147 652 h-7 v-6"/>
+    </g>
+
+    <!-- 兩行字幕（台詞是自己編的） -->
+    <text class="t sub" x="600" y="503" font-size="38" fill="#ffe27a">Did you hear that?</text>
+    <text class="t sub" x="600" y="545" font-size="28" fill="#fff">你有聽到嗎？</text>
+
+    <!-- 語言選單 -->
+    <rect x="808" y="300" width="370" height="276" rx="8" fill="#101010" opacity="0.94"/>
+    <path d="M1042 576 l9 9 l9 -9 Z" fill="#101010" opacity="0.94"/>
+    <g class="t">
+      <text x="830" y="330" class="hint">上排（黃）</text>
+      <text x="830" y="360" class="opt"> 關閉</text>
+      <text x="830" y="388" class="opt on">✓ 英文（美國） CC</text>
+      <text x="830" y="416" class="opt"> 中文（繁體，台灣）</text>
+      <text x="830" y="444" class="opt"> 日文</text>
+
+      <text x="1004" y="330" class="hint">下排（白）</text>
+      <text x="1004" y="360" class="opt"> 關閉</text>
+      <text x="1004" y="388" class="opt"> 英文（美國） CC</text>
+      <text x="1004" y="416" class="opt on">✓ 中文（繁體，台灣）</text>
+      <text x="1004" y="444" class="opt"> 日文</text>
+
+      <line x1="830" y1="470" x2="1156" y2="470" stroke="#fff" stroke-opacity="0.15"/>
+      <text x="830" y="496" class="hint">Alt+Shift+D　開／關雙字幕</text>
+      <text x="830" y="520" class="hint">Alt+Shift+↑ / ↓　字級大／小</text>
+      <text x="830" y="544" class="hint">Alt+Shift+[ / ]　字幕延後／提早 0.1 秒</text>
+    </g>
+
+    <!-- 編號標示（README 圖說對應） -->
+    <g class="badge t">
+      <circle cx="388" cy="490" r="14"/><text x="388" y="495.5">1</text>
+      <circle cx="1030" cy="618" r="12"/><text x="1030" y="623.5">2</text>
+      <circle cx="808" cy="300" r="14"/><text x="808" y="305.5">3</text>
+    </g>
+  </g>
+</svg>
