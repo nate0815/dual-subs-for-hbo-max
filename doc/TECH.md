@@ -153,7 +153,7 @@ node --test
 | `TICK_MS`（100） | `src/main.js` | 字幕更新頻率；越小越跟手、越耗電 |
 | `DEFAULTS`（語言、字級倍率、偏移） | `src/main.js` | 初始設定；使用者調整後以 `localStorage` 為準 |
 | 字級倍率範圍 0.5～2、步進 0.1 | `src/main.js`（快捷鍵處理） | 快捷鍵能調到多大多小 |
-| `FONT_RATIO`（0.04）、下排放大 1.1 | `src/lib/overlay.js` | 字級：影片高度的比例 |
+| `FONT_TOP`（0.046）、`FONT_BOTTOM`（0.034） | `src/lib/overlay.js` | 字級：影片高度的比例。上排主字幕較大、下排副字幕較小 |
 | `BOTTOM_PAD`（9%） | `src/lib/overlay.js` | 字幕離畫面下緣多遠，避開控制列 |
 | 上排黃 `#ffe27a`、下排白 `#ffffff` | `src/lib/overlay.js` | 兩行字的顏色 |
 | `LOOKBACK`（12） | `src/lib/vtt.js` | `activeAt` 往回看幾句，涵蓋重疊的句子 |

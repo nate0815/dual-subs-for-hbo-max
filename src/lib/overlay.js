@@ -5,8 +5,10 @@
 
   const ID = 'hds-overlay'
 
-  // 字級 = 影片高度 × 這個比例 × 使用者的 fontScale。假值，實機看了再調。
-  const FONT_RATIO = 0.04
+  // 字級 = 影片高度 × 這個比例 × 使用者的 fontScale（DESIGN「顯示規則」的「字級」）。假值，實機看了再調。
+  // 上排是主字幕、較大；下排是副字幕、較小。
+  const FONT_TOP = 0.046
+  const FONT_BOTTOM = 0.034
   // 底部留白（佔影片**高度**的比例），規則見 DESIGN「顯示規則」的「底部留白」。全是假值。
   // ⚠️ 不能寫成 CSS 的 paddingBottom:'9%' —— padding 的百分比是相對**寬度**算的，
   //    寬螢幕上會變成高度的 18% 左右，字幕整個往上飄。一律算成 px。
@@ -90,9 +92,8 @@
         el.style.height = r.height + 'px'
         const pad = Math.round(bottomPad(r, ctl)) + 'px'
         if (el.style.paddingBottom !== pad) el.style.paddingBottom = pad
-        const base = r.height * FONT_RATIO * fontScale
-        top.style.fontSize = base + 'px'
-        bottom.style.fontSize = base * 1.1 + 'px'
+        top.style.fontSize = r.height * FONT_TOP * fontScale + 'px'
+        bottom.style.fontSize = r.height * FONT_BOTTOM * fontScale + 'px'
       },
       show(flag) {
         const v = flag ? 'flex' : 'none'
