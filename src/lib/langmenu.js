@@ -26,12 +26,22 @@
 
   /* ── 純函式（node 可測） ─────────────────────────────── */
 
+  /** 拿掉「該語言本來就用這種文字」的多餘文字標記，例 ja-Jpan → ja（否則名稱變成「日文（日文）」）。
+   *  中文例外：繁體／簡體正是用來分軌的資訊（DESIGN「軌的名稱」例「中文（繁體，台灣）」），一律保留。
+   *  地區永遠保留。 */
+  function dropDefaultScript(lang) {
+    const loc = new Intl.Locale(lang)
+    if (!loc.script || loc.language === 'zh') return lang
+    if (new Intl.Locale(loc.language).maximize().script !== loc.script) return lang
+    return loc.region ? loc.language + '-' + loc.region : loc.language
+  }
+
   let displayNames = null
   /** 語言代碼 → 繁中名稱，例 en-US → 英文（美國）。代碼不合法時退回代碼本身。 */
   function langName(lang) {
     try {
       displayNames = displayNames || new Intl.DisplayNames(['zh-Hant'], { type: 'language' })
-      return displayNames.of(lang) || lang
+      return displayNames.of(dropDefaultScript(lang)) || lang
     } catch {
       return lang || '未知語言'
     }

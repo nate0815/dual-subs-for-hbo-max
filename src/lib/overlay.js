@@ -29,6 +29,9 @@
 
   function line(color) {
     const d = document.createElement('div')
+    // 依內容決定書寫方向：希伯來文、阿拉伯文等由右往左的語言，不設的話句尾標點會跑到另一端、
+    // 夾雜的拉丁字母順序錯亂（Rick and Morty 希伯來文軌實測）。
+    d.dir = 'auto'
     Object.assign(d.style, {
       color,
       fontFamily: '"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif',
