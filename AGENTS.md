@@ -58,9 +58,10 @@ DESIGN.md 的寫入受機制保護，**兩種工具的行為刻意不同**：
 
 ## 4. 這個專案的性質
 
-個人自用的 Chrome 擴充功能（Manifest V3）：在 HBO Max 播放頁同時顯示兩條**官方**字幕（英文 CC 在上、繁中在下）。
-沒有 build step、沒有框架、沒有 npm 相依 —— 純 JavaScript，用 `node --test` 跑單元測試。價值在改得快、載入未封裝項目就能試。
-不要為了「比較正規」引入打包工具、TypeScript 或框架。
+Chrome 擴充功能（Manifest V3）：在 HBO Max 播放頁同時顯示兩條**官方**字幕（預設英文 CC 在上、繁中在下），公開在 GitHub 分享。
+**開發**沒有 build step、沒有框架、沒有 npm 相依 —— 純 JavaScript，用 `node --test` 跑單元測試。價值在改得快、竄改猴或載入未封裝項目就能試。
+唯一的「建置」是**發佈**竄改猴版時，`scripts/build-userscript.mjs` 照 manifest 順序把原始檔串成一個檔 —— 零相依、不轉譯，開發時不需要跑。
+不要為了「比較正規」引入打包工具、TypeScript 或框架，也不要把那支串接腳本長成打包工具。
 
 **三條不要碰的線**：
 
@@ -119,6 +120,16 @@ DESIGN.md 的寫入受機制保護，**兩種工具的行為刻意不同**：
 
 正式版 `v<major>.<minor>.<patch>`，例 `v0.1.0`，打在 `main`。
 打 tag 時 `manifest.json` 的 `version` 要一起改成同一個號。
+
+**每個 tag 都要發一個 GitHub Release，附上竄改猴腳本**（使用者的自動更新靠它）：
+
+```bash
+npm test && npm run build              # 產出 dist/hds.user.js，@version 取自 manifest
+gh release create v0.1.0 dist/hds.user.js --title v0.1.0 --notes "<這版改了什麼>"
+```
+
+⚠️ 附件檔名必須是 `hds.user.js`（腳本裡的更新網址寫死 `releases/latest/download/hds.user.js`）。
+⚠️ 沒 bump `manifest.json` 的 `version` 就發佈，竄改猴會判斷「沒有新版」而**不更新，也不報錯**。
 
 > ⚠️ [doc/DESIGN.md](doc/DESIGN.md) 版本紀錄裡的 `v0.1` 是**文件內部版本**，
 > 跟 git tag（與 `manifest.json` 的 `version`）**是兩套編號**。兩者不對齊，也不該對齊 ——

@@ -10,12 +10,25 @@ Shows two **official** subtitle tracks at the same time on the HBO Max (Taiwan) 
 
 ## 1. Install
 
-1. Get this folder (`git clone`, or unzip the copy you were given).
+Use **one** of the two methods, not both (otherwise you'll see two sets of subtitles).
+
+### Method A: Tampermonkey (recommended, updates automatically)
+
+1. Install [Tampermonkey](https://www.tampermonkey.net/) in Chrome.
+2. Open `chrome://extensions`, click **Details** on Tampermonkey, and turn on **Allow user scripts** (only newer Chrome versions have this switch; skip it if you don't see it).
+3. Open this link: <https://github.com/nate0815/HboDualSub/releases/latest/download/hds.user.js>
+4. Tampermonkey shows an install page. Click **Install**.
+
+When a new version is released, Tampermonkey updates it automatically (or click "Check for updates" in Tampermonkey's dashboard).
+
+### Method B: Load unpacked
+
+1. Get this folder (`git clone`, or on the GitHub page click Code → "Download ZIP" and unzip it).
 2. Open `chrome://extensions` and turn on **Developer mode** (top right).
 3. Click **Load unpacked** and select this folder (the one containing `manifest.json`).
-4. "HBO Max 雙字幕（自用）" appears in the list. You're done.
+4. To update: download again or `git pull`, then click reload on this extension in `chrome://extensions`.
 
-The extension requests no permissions and collects or sends no data. Subtitles are processed only in your browser's memory.
+Neither method needs any permissions, and the tool collects or sends no data. Subtitles are processed only in your browser's memory.
 
 ## 2. Getting started
 

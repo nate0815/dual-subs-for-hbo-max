@@ -10,12 +10,25 @@
 
 ## 1. 安裝
 
-1. 取得這個資料夾（`git clone`，或別人給你的 zip 解壓縮）。
+兩種方法**擇一**，不要同時裝（畫面會出現兩組字幕）。
+
+### 方法 A：竄改猴（建議，會自動更新）
+
+1. 在 Chrome 安裝 [Tampermonkey（竄改猴）](https://www.tampermonkey.net/)。
+2. 到 `chrome://extensions`，打開竄改猴的「**詳細資料**」，開啟「**允許使用者指令碼**」（較新版 Chrome 才有這個開關；沒看到就略過）。
+3. 點這個連結：<https://github.com/nate0815/HboDualSub/releases/latest/download/hds.user.js>
+4. 竄改猴會跳出安裝頁，按「**安裝**」。
+
+之後有新版時，竄改猴會自動更新（也可以在竄改猴的管理頁按「檢查更新」）。
+
+### 方法 B：載入未封裝項目
+
+1. 取得這個資料夾（`git clone`，或在 GitHub 頁面按 Code →「Download ZIP」後解壓縮）。
 2. Chrome 網址列輸入 `chrome://extensions`，右上角開啟「**開發人員模式**」。
 3. 按「**載入未封裝項目**」，選這個資料夾（有 `manifest.json` 的那一層）。
-4. 清單裡出現「HBO Max 雙字幕（自用）」就裝好了。
+4. 更新時：重新下載或 `git pull`，再到 `chrome://extensions` 按本工具的重新載入。
 
-不需要任何權限，也不會收集或傳送任何資料。字幕只在你的瀏覽器記憶體裡處理。
+兩種方法都不需要任何權限，也不會收集或傳送任何資料。字幕只在你的瀏覽器記憶體裡處理。
 
 ## 2. 開始使用
 

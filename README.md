@@ -6,6 +6,8 @@
 
 ## 怎麼跑起來
 
+**只是要用**：照 [使用說明](USAGE.zh-TW.md)「安裝」的方法 A，用竄改猴點連結安裝（會自動更新）。以下是開發者的跑法。
+
 0. 取得原始碼：`git clone https://github.com/nate0815/HboDualSub.git`（沒有 build step、沒有相依套件，clone 下來就能載入）。
 1. 開 Chrome → 網址列輸入 `chrome://extensions` → 右上角開啟「開發人員模式」。
 2. 按「載入未封裝項目」→ 選這個資料夾（有 `manifest.json` 的那層）。
@@ -20,6 +22,8 @@
 開發時想省掉這一步，可改用竄改猴載入 [dev/hds.user.js](dev/hds.user.js)（用法寫在檔頭；與未封裝擴充功能二選一）。
 
 快速確認解析邏輯沒壞：`node --test`（需要 Node 18+）。
+
+發佈新版（產生竄改猴腳本並附到 GitHub Release）：見 [AGENTS.md](AGENTS.md)「tag」。
 
 ## 文件在哪
 

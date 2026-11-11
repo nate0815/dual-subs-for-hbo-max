@@ -117,7 +117,7 @@ node --test
 
 | # | 不變式 | 保護哪個檔／符號 | 破壞後的症狀 |
 |---|---|---|---|
-| 1 | `manifest.json` 的 `js` 順序必須是 `vtt` → `mpd` → `overlay` → `langmenu` → `main`，且 `dev/hds.user.js` 的 `@require` 順序**與它一致** | `manifest.json` `content_scripts[0].js`、`dev/hds.user.js` | `main.js` 解構到 `undefined`，整個腳本靜默失效，頁面看起來一切正常，只是沒有字幕。只改一邊的話，另一種載入方式壞掉，而開發時不會發現 |
+| 1 | `manifest.json` 的 `js` 順序必須是 `vtt` → `mpd` → `overlay` → `langmenu` → `main`，且 `dev/hds.user.js` 的 `@require` 順序**與它一致**（發佈用的 `scripts/build-userscript.mjs` 直接讀 manifest，不必另外對） | `manifest.json` `content_scripts[0].js`、`dev/hds.user.js` | `main.js` 解構到 `undefined`，整個腳本靜默失效，頁面看起來一切正常，只是沒有字幕。只改一邊的話，另一種載入方式壞掉，而開發時不會發現 |
 | 2 | 內容腳本必須在主世界（`"world": "MAIN"`） | `manifest.json` | 預設的隔離世界看不到頁面的資源請求時序，也可能行為不同；**目前只在主世界驗證過**，改了要重新驗 |
 | 3 | 字幕網址取自清單檔的 `SegmentTemplate`，查詢字串**原樣保留** | `src/lib/mpd.js` `parseTextTracks` | 少了查詢參數會 403 或抓到別的內容，而且錯誤只出現在 `fetch`，不會指向這裡 |
 | 4 | 清單檔裡的 `&amp;` 必須還原成 `&` 之後才能當網址用 | `src/lib/mpd.js` `parseTextTracks` | 網址看起來差不多但請求失敗；測試不涵蓋就看不出來 |
@@ -128,6 +128,7 @@ node --test
 | 9 | 字幕內容絕不持久化（不寫儲存、不寫檔、不印主控台、不進版控）。`state.cache` 只在記憶體、換集就清 | `src/main.js`、`test/` | 版權與帳號風險；也違反 [AGENTS.md](../AGENTS.md) 的紅線 |
 | 10 | 找 HBO 控制列只用 `data-testid`（錨點 `player-ux-track-selector-button`），**不用 class** | `src/lib/langmenu.js` `ANCHOR`／`findAnchor` | class 是 styled-components 雜湊，同頁就有兩組、改版就變：按鈕會插到錯的那組或直接找不到，畫面上只看到「浮動按鈕跑出來」 |
 | 11 | 語言按鈕、面板、快捷鍵提示（toast）都不可放進疊加層；按鈕與面板要吃掉滑鼠事件（`swallow`） | `src/lib/langmenu.js` `createLangMenu` | 放進疊加層 → 按鈕被 `pointer-events: none` 繼承，點不到；toast 跟著疊加層一起被隱藏，偏偏「雙字幕：關」正是疊加層隱藏時要看到的。不吃事件 → 點選單冒泡到 HBO 播放器，被當成點影片而暫停 |
+| 12 | 發佈時 `manifest.json` 的 `version` 一定要 bump，且 Release 附件檔名一定是 `hds.user.js` | `manifest.json`、`scripts/build-userscript.mjs` `RELEASE_URL` | 竄改猴比對 `@version` 判斷有沒有新版：沒 bump → 使用者永遠停在舊版；檔名不對 → 更新網址 404。**兩者都不會有任何錯誤訊息** |
 
 ---
 
@@ -223,4 +224,6 @@ node --test
 - （→ 數值一覽）底部留白三個比例都在 `src/lib/overlay.js`：`PAD_LOW`（0.04，控制列收起）、`PAD_GAP`（0.015，控制列出現時與其上緣的間距）、`PAD_FALLBACK`（0.09，偵測不到控制列）。一律依影片高度換算 px —— CSS 的 padding 百分比相對**寬度**，見 [字幕比規格高一倍](gotchas/2026-11-11-字幕比規格高一倍.md)。
 - （→ 模組契約）`overlay.js` 新增純函式 `bottomPad(rect, ctl)`；`place(video, host, fontScale, ctl)` 多一個 `ctl`；`setText(top, bottom, topOn, bottomOn)`：`on` 為真時即使沒字也保留一行（`visibility: hidden` ＋不換行空白），為假時整排 `display: none`。
 - （→ 模組契約）`langmenu.js` 新增 `findControls()` → `{ top, visible }` 或 `null`（從沒看過控制列）。看過之後找不到一律當「收起」，因為 HBO 收起控制列可能是淡出也可能整個拔掉。`main.js` 每個 tick 把它傳給 `place`。
+- （→ 檔案清單）`scripts/build-userscript.mjs`：發佈用，照 `manifest.json` 的 `content_scripts[0].js` 順序串成 `dist/hds.user.js`（gitignore）；`@version`／`@match` 取自 manifest，`@updateURL`／`@downloadURL` 指向 `releases/latest/download/hds.user.js`。匯出純函式 `buildUserscript(manifest, readFile)`，`test/build.test.mjs` 測順序、版本、語法。開發不用跑。
+- （→ 驗證與回歸）發佈前：`npm test && npm run build`；發佈後用一個沒裝開發版的 Chrome 設定檔，從 Release 連結安裝實測一次。步驟見 AGENTS「tag」。
 - （→ ?）嵌入位置：按鈕插在字幕設定按鈕（💬）的**左邊**、尺寸複製該按鈕的 `offsetWidth/Height`。每個 tick 檢查，被 React 重繪掉就插回去。浮動按鈕貼在影片右下角（右 64px、下 120px）。
