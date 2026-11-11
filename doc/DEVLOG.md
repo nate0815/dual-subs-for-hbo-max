@@ -230,7 +230,7 @@ code: []
 | 4 | 服務條款是否允許 | 帳號風險 | 未評估，僅限個人使用 |
 | 5 | 英文軌在頁面的 `performance` 資源清單裡看不到，但網路工具看得到，為什麼 | 影響「觀察請求」的可靠度；目前靠清單檔避開 | 原因未證實，未深究 |
 | 6 | 是否上架、走哪種可見度 | 版權、服務條款、商標、維護四項風險 | **2026-11-11 結論**：不經商店（含不公開／測試人員），見 [不經商店分享](decisions/2026-11-11-不經商店分享.md)；分享管道另列 #9 |
-| 7 | Claude Code 的 Stop hook 用 `"command": "node"` ＋ `"args"` 的寫法是否真的會執行腳本 | 不認 `args` 的話 hook 只跑一個空的 `node`，收工檢查**靜默失效** | 待驗：只改 `src/` 不回填就收工，看會不會被擋 |
+| 7 | Claude Code 的 Stop hook 用 `"command": "node"` ＋ `"args"` 的寫法是否真的會執行腳本 | 不認 `args` 的話 hook 只跑一個空的 `node`，收工檢查**靜默失效** | **2026-11-11 結論**：會擋。實作語言選單時故意只改程式就收工，Stop hook 擋下並列出 6 個異動檔 —— `args` 寫法有效 |
 | 8 | Codex 的 `${CODEX_PROJECT_DIR}` 變數是否存在 | 兩個 Codex hook 都依賴它，不存在就靜默失效 | 待驗（用 Codex 時），見 `.codex/config.toml` 檔頭 |
 | 9 | 不經商店的分享管道（私下給 zip、私人 repo 邀請等） | 決定別人怎麼安裝與更新 | 待決，見 DESIGN「待決事項」 |
 | 10 | HBO 控制列的 DOM 長什麼樣、用什麼選擇器嵌入最穩 | 語言按鈕嵌入的前提 | **2026-11-11 結論**：錨點用 `button[data-testid="player-ux-track-selector-button"]`，其 `parentElement` 是右下群組；不用 class（同頁就有兩組雜湊），見 [同一頁有兩組控制列class雜湊不同](gotchas/2026-11-11-同一頁有兩組控制列class雜湊不同.md) 與當天 devlog |

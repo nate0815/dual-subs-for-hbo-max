@@ -11,6 +11,7 @@
         "src/lib/vtt.js",
         "src/lib/mpd.js",
         "src/lib/overlay.js",
+        "src/lib/langmenu.js",
         "src/main.js"
       ],
       "run_at": "document_start",

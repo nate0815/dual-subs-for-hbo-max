@@ -9,6 +9,7 @@
 // @require      file:///D:/2026_Practice/HboDualSub/src/lib/vtt.js
 // @require      file:///D:/2026_Practice/HboDualSub/src/lib/mpd.js
 // @require      file:///D:/2026_Practice/HboDualSub/src/lib/overlay.js
+// @require      file:///D:/2026_Practice/HboDualSub/src/lib/langmenu.js
 // @require      file:///D:/2026_Practice/HboDualSub/src/main.js
 // ==/UserScript==
 

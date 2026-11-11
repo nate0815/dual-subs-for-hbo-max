@@ -73,7 +73,20 @@
     return null
   }
 
-  const api = { isMpdUrl, parseTextTracks, pickTrack }
+  /** 依設定值挑軌。設定值有三種形狀（見 doc/TECH.md「核心資料契約」）：
+   *  - 陣列：語言前綴清單（預設值）→ 交給 pickTrack
+   *  - { lang, role }：使用者在語言選單選的那條 → 語言完全相同（不分大小寫）者優先挑同角色，
+   *    沒有同角色就挑同語言的第一條；語言不同一律不算（DESIGN：不自動改用別的語言）
+   *  - null／其他：關閉 → null */
+  function resolveTrack(tracks, pref) {
+    if (Array.isArray(pref)) return pickTrack(tracks, pref)
+    if (!pref || typeof pref !== 'object' || !pref.lang) return null
+    const lang = String(pref.lang).toLowerCase()
+    const same = tracks.filter((t) => t.lang.toLowerCase() === lang)
+    return same.find((t) => t.role === pref.role) || same[0] || null
+  }
+
+  const api = { isMpdUrl, parseTextTracks, pickTrack, resolveTrack }
   if (typeof module !== 'undefined' && module.exports) module.exports = api
   else root.__HDS__ = Object.assign(root.__HDS__ || {}, api)
 })(typeof globalThis !== 'undefined' ? globalThis : this)
