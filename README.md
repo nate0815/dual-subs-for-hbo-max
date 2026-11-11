@@ -4,6 +4,14 @@
 
 *Shows two official HBO Max subtitle tracks at once (e.g. English CC + Traditional Chinese). Unofficial, not affiliated with HBO. English guide: [USAGE.en.md](USAGE.en.md).*
 
+![安裝後的樣子（示意圖）：畫面下方兩行字幕，控制列的語言按鈕打開了語言選單](doc/images/preview.svg)
+
+*示意圖，畫面與台詞皆為自製，不是 HBO 的截圖。*
+
+- ① 兩條官方字幕：上排黃色（預設英文 CC）、下排白色（預設繁體中文）
+- ② 控制列上的語言按鈕，在 💬 字幕設定按鈕左邊
+- ③ 語言選單：上下排各自挑這集有的字幕軌，底部列出快捷鍵
+
 > ⚠️ 安裝前請先讀 [免責聲明](#免責聲明)。
 
 ## 這是什麼

@@ -237,3 +237,4 @@ node --test
 - （→ 模組契約）`overlay.js` 兩排字幕元素設 `dir="auto"`：由右往左的語言（希伯來文、阿拉伯文）才排得對，見 [由右往左的字幕排版錯亂](gotchas/2026-11-11-由右往左的字幕排版錯亂.md)。
 - （→ 刻意沒做的事）日文（以及韓文等）字幕的漢字以**繁中字形**顯示：兩排字型清單是 `"Noto Sans TC","Microsoft JhengHei",…`、沒設 `lang`。字幕檔只給字碼，字形由字型決定，所以不會「跟著字幕檔走」。2026-11-11 實測：同一個「直」「語」「草」在日文字型下字形不同（例「言」字旁第一筆）。差異細微、不影響閱讀，Nate 判斷不需處理。要修的話：依軌的語言在那排設 `lang`，字型清單依語言切換。
 - （→ 檔案清單）開發者名稱是 `chiao23`，出現在三處、要一起改：`LICENSE` 版權人、`package.json` 的 `author`、`scripts/build-userscript.mjs` 的 `AUTHOR`（竄改猴 `@author`）。`test/build.test.mjs` 檢查三處一致。網址裡的 `nate0815` 是 GitHub 帳號，不是開發者名稱，不跟著改。
+- （→ 檔案清單）`doc/images/preview.svg`：README 開頭的示意圖，手寫 SVG（無相依）。畫面與台詞全是自製（DESIGN「商標與命名」：不能放劇的畫面）。**介面改了要跟著改**：顏色（上黃下白）、按鈕圖示、選單欄位與快捷鍵文字都是照 `overlay.js`／`langmenu.js` 畫的。預覽方式：Chrome 不讓 Claude in Chrome 開 `file://`，要用本機暫時的 HTTP 伺服器開。
