@@ -87,6 +87,24 @@
     return null
   }
 
+  let controlsSeen = false
+  /** 控制列的位置與是否看得見 → { top, visible }；從沒看過控制列則回 null（呼叫端退回固定留白）。
+   *  給疊加層決定字幕要不要讓開（DESIGN「底部留白」）。放在這裡是因為它跟語言按鈕一樣依賴 HBO 頁面結構。
+   *  看得見與否：控制列收起時 HBO 可能是淡出（opacity）也可能整個拔掉，兩種都要認。 */
+  function findControls() {
+    const anchor = findAnchor()
+    const footer = anchor && anchor.closest('[data-testid="control_footer"]')
+    if (!footer) return controlsSeen ? { top: 0, visible: false } : null
+    controlsSeen = true
+    for (let e = footer; e && e !== document.body; e = e.parentElement) {
+      const cs = getComputedStyle(e)
+      if (cs.display === 'none' || cs.visibility === 'hidden' || Number(cs.opacity) < 0.05) {
+        return { top: 0, visible: false }
+      }
+    }
+    return { top: footer.getBoundingClientRect().top, visible: true }
+  }
+
   /**
    * @param {object} o
    * @param {() => {status:string, enabled:boolean, tracks:object[], top:object|null, bottom:object|null}} o.getView
@@ -368,7 +386,7 @@
     }
   }
 
-  const api = { langName, trackLabel, formatOffset, createLangMenu }
+  const api = { langName, trackLabel, formatOffset, createLangMenu, findControls }
   if (typeof module !== 'undefined' && module.exports) module.exports = api
   else root.__HDS__ = Object.assign(root.__HDS__ || {}, api)
 })(typeof globalThis !== 'undefined' ? globalThis : this)

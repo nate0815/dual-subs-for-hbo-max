@@ -220,5 +220,7 @@ node --test
 - （→ 數值一覽）`FLOAT_AFTER_MS`（1500）：控制列消失多久才改用浮動按鈕；`FLOAT_IDLE_MS`（3000）：浮動按鈕在滑鼠停止多久後隱藏。都在 `src/lib/langmenu.js`，假值。
 - （→ 模組契約）`langmenu.js` 新增純函式 `formatOffset(offsetMs)`（快捷鍵提示文字，正值＝提早），與實例方法 `flash(text)`（影片上方中央顯示 `TOAST_MS` 後消失）。`getView()` 多回傳 `enabled`：關閉時按鈕 `opacity` 0.45、面板頂端顯示提示；面板底部固定列出 `HOTKEYS`。
 - （→ 數值一覽）`TOAST_MS`（1500）：快捷鍵提示顯示多久，`src/lib/langmenu.js`。
-- （→ 數值一覽）`BOTTOM_PAD` 改為比例數字 0.09，在 `place()` 依影片高度換算 px —— CSS 的 padding 百分比相對**寬度**，見 [字幕比規格高一倍](gotchas/2026-11-11-字幕比規格高一倍.md)。
+- （→ 數值一覽）底部留白三個比例都在 `src/lib/overlay.js`：`PAD_LOW`（0.04，控制列收起）、`PAD_GAP`（0.015，控制列出現時與其上緣的間距）、`PAD_FALLBACK`（0.09，偵測不到控制列）。一律依影片高度換算 px —— CSS 的 padding 百分比相對**寬度**，見 [字幕比規格高一倍](gotchas/2026-11-11-字幕比規格高一倍.md)。
+- （→ 模組契約）`overlay.js` 新增純函式 `bottomPad(rect, ctl)`；`place(video, host, fontScale, ctl)` 多一個 `ctl`；`setText(top, bottom, topOn, bottomOn)`：`on` 為真時即使沒字也保留一行（`visibility: hidden` ＋不換行空白），為假時整排 `display: none`。
+- （→ 模組契約）`langmenu.js` 新增 `findControls()` → `{ top, visible }` 或 `null`（從沒看過控制列）。看過之後找不到一律當「收起」，因為 HBO 收起控制列可能是淡出也可能整個拔掉。`main.js` 每個 tick 把它傳給 `place`。
 - （→ ?）嵌入位置：按鈕插在字幕設定按鈕（💬）的**左邊**、尺寸複製該按鈕的 `offsetWidth/Height`。每個 tick 檢查，被 React 重繪掉就插回去。浮動按鈕貼在影片右下角（右 64px、下 120px）。

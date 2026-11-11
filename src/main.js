@@ -15,6 +15,7 @@
     createOverlay,
     createLangMenu,
     formatOffset,
+    findControls,
   } = window.__HDS__
 
   const TAG = '[HDS]'
@@ -182,8 +183,15 @@
       return
     }
     const t = video.currentTime + s.offsetMs / 1000
-    ov.place(video, host, s.fontScale)
-    ov.setText(textOf(activeAt(state.top, t)), textOf(activeAt(state.bottom, t)))
+    // 控制列出現時字幕讓到它上方、收起時貼近下緣（DESIGN「底部留白」）
+    ov.place(video, host, s.fontScale, findControls())
+    // 有選軌的那排即使此刻沒句子也保留空間，另一排才不會跳（DESIGN「排的位置穩定」）
+    ov.setText(
+      textOf(activeAt(state.top, t)),
+      textOf(activeAt(state.bottom, t)),
+      !!state.topTrack,
+      !!state.bottomTrack,
+    )
     ov.show(true)
   }
   setInterval(tick, TICK_MS)

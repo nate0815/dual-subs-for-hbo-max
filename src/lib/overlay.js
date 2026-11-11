@@ -7,10 +7,23 @@
 
   // 字級 = 影片高度 × 這個比例 × 使用者的 fontScale。假值，實機看了再調。
   const FONT_RATIO = 0.04
-  // 疊加層底部留給播放器控制列的空間（佔影片**高度**的比例）。假值。
+  // 底部留白（佔影片**高度**的比例），規則見 DESIGN「顯示規則」的「底部留白」。全是假值。
   // ⚠️ 不能寫成 CSS 的 paddingBottom:'9%' —— padding 的百分比是相對**寬度**算的，
-  //    寬螢幕上會變成高度的 18% 左右，字幕整個往上飄。要在 place() 裡用高度換算成 px。
-  const BOTTOM_PAD = 0.09
+  //    寬螢幕上會變成高度的 18% 左右，字幕整個往上飄。一律算成 px。
+  const PAD_LOW = 0.04 //      控制列收起時
+  const PAD_GAP = 0.015 //     控制列出現時，字幕底部與控制列上緣的間距
+  const PAD_FALLBACK = 0.09 // 偵測不到控制列時
+
+  /** 字幕底部要離影片下緣多少 px。純函式。
+   *  rect：影片的 { bottom, height }；ctl：控制列 { top, visible }，偵測不到給 null。 */
+  function bottomPad(rect, ctl) {
+    if (!ctl) return rect.height * PAD_FALLBACK
+    const low = rect.height * PAD_LOW
+    if (!ctl.visible) return low
+    return Math.max(low, rect.bottom - ctl.top + rect.height * PAD_GAP)
+  }
+
+  const NBSP = ' '
 
   function line(color) {
     const d = document.createElement('div')
@@ -43,31 +56,40 @@
       alignItems: 'center',
       justifyContent: 'flex-end',
       boxSizing: 'border-box',
+      transition: 'padding-bottom 0.2s ease', // 跟著控制列上下移動時平滑過渡
     })
     const top = line('#ffffff')
     const bottom = line('#ffe27a')
     el.append(top, bottom)
 
-    function setLine(node, text) {
-      if (node.textContent !== text) node.textContent = text
-      node.style.display = text ? 'block' : 'none'
+    /** on＝這一排有選語言（有軌）。有軌但此刻沒句子 → 保留一行空間、不顯示字，
+     *  另一排才不會跟著上下跳（DESIGN「排的位置穩定」）。沒軌 → 整排收起。 */
+    function setLine(node, text, on) {
+      const shown = on ? text || NBSP : ''
+      if (node.textContent !== shown) node.textContent = shown
+      const display = on ? 'block' : 'none'
+      if (node.style.display !== display) node.style.display = display
+      const vis = text ? 'visible' : 'hidden'
+      if (node.style.visibility !== vis) node.style.visibility = vis
     }
 
     return {
       el,
-      setText(topText, bottomText) {
-        setLine(top, topText)
-        setLine(bottom, bottomText)
+      setText(topText, bottomText, topOn = true, bottomOn = true) {
+        setLine(top, topText, topOn)
+        setLine(bottom, bottomText, bottomOn)
       },
-      /** 對齊影片的畫面位置；host 是要掛在哪個元素底下（全螢幕時必須是 fullscreenElement）。 */
-      place(video, host, fontScale) {
+      /** 對齊影片的畫面位置；host 是要掛在哪個元素底下（全螢幕時必須是 fullscreenElement）。
+       *  ctl：控制列 { top, visible }，偵測不到給 null —— 決定底部留白。 */
+      place(video, host, fontScale, ctl) {
         if (el.parentElement !== host) host.appendChild(el)
         const r = video.getBoundingClientRect()
         el.style.left = r.left + 'px'
         el.style.top = r.top + 'px'
         el.style.width = r.width + 'px'
         el.style.height = r.height + 'px'
-        el.style.paddingBottom = r.height * BOTTOM_PAD + 'px'
+        const pad = Math.round(bottomPad(r, ctl)) + 'px'
+        if (el.style.paddingBottom !== pad) el.style.paddingBottom = pad
         const base = r.height * FONT_RATIO * fontScale
         top.style.fontSize = base + 'px'
         bottom.style.fontSize = base * 1.1 + 'px'
@@ -82,7 +104,7 @@
     }
   }
 
-  const api = { createOverlay }
+  const api = { createOverlay, bottomPad }
   if (typeof module !== 'undefined' && module.exports) module.exports = api
   else root.__HDS__ = Object.assign(root.__HDS__ || {}, api)
 })(typeof globalThis !== 'undefined' ? globalThis : this)
