@@ -29,9 +29,40 @@
   }
 
   /** 解析清單檔，回傳所有文字軌：
-   *  [{ id, lang, role, segments, url }]
-   *  url 是第一個分段（startNumber）的完整網址，相對於清單檔自己的網址解析。 */
+   *  [{ id, lang, role, segments, url, urls }]
+   *  - urls：這條軌在**每個 Period** 的字幕檔網址，依 Period 順序。整集只有一段時就一個。
+   *    各段字幕的時間碼都從整集開頭算（實測 Rick and Morty），所以全部抓下來接起來就對了。
+   *  - url：urls[0]，相容舊呼叫端。
+   *  - 同一 Period 內語言＋角色相同的第 n 條，與其他 Period 的第 n 條視為同一條軌。
+   *  網址都相對於清單檔自己的網址解析。 */
   function parseTextTracks(xml, baseUrl) {
+    const src = String(xml)
+    // 沒有 <Period> 標籤（或結構看不懂）就把整份當成一段
+    const periods = src.match(/<Period\b[\s\S]*?<\/Period>/g) || [src]
+    const merged = []
+    const byKey = new Map()
+    for (const period of periods) {
+      const seen = new Map() // 這一段裡 lang|role 出現第幾次
+      for (const t of parsePeriod(period, baseUrl)) {
+        const base = t.lang + '|' + t.role
+        const n = (seen.get(base) || 0) + 1
+        seen.set(base, n)
+        const key = base + '|' + n
+        const hit = byKey.get(key)
+        if (hit) {
+          hit.urls.push(t.url)
+        } else {
+          const track = { ...t, urls: [t.url] }
+          byKey.set(key, track)
+          merged.push(track)
+        }
+      }
+    }
+    return merged
+  }
+
+  /** 一個 Period（或整份清單）裡的文字軌，每個 AdaptationSet 一條。 */
+  function parsePeriod(xml, baseUrl) {
     const tracks = []
     const setRe = /<AdaptationSet\b([^>]*)>([\s\S]*?)<\/AdaptationSet>/g
     let m
