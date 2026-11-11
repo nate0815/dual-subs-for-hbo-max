@@ -19,6 +19,9 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 /** 發佈位置：最新一版 Release 的附件。竄改猴用它檢查與下載更新。 */
+// 竄改猴「作者」欄顯示的名稱；與 LICENSE 版權人、package.json 的 author 一致。
+// 網址裡的 nate0815 是 GitHub 帳號，不跟著改。
+export const AUTHOR = 'chiao23'
 export const RELEASE_URL = 'https://github.com/nate0815/dual-subs-for-hbo-max/releases/latest/download/hds.user.js'
 
 /** 純函式：manifest 物件 ＋ 讀檔函式 → userscript 全文。測試直接呼叫這支。 */
@@ -28,6 +31,7 @@ export function buildUserscript(manifest, readFile) {
     '// ==UserScript==',
     `// @name         ${manifest.name}`,
     '// @namespace    https://github.com/nate0815/dual-subs-for-hbo-max',
+    `// @author       ${AUTHOR}`,
     `// @version      ${manifest.version}`,
     `// @description  ${manifest.description}`,
     ...cs.matches.map((m) => `// @match        ${m}`),

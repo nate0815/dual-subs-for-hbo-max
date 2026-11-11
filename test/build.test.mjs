@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { Script } from 'node:vm'
-import { buildUserscript, RELEASE_URL } from '../scripts/build-userscript.mjs'
+import { buildUserscript, RELEASE_URL, AUTHOR } from '../scripts/build-userscript.mjs'
 
 const manifest = JSON.parse(readFileSync(new URL('../manifest.json', import.meta.url), 'utf8'))
 const readFile = (f) => readFileSync(new URL('../' + f, import.meta.url), 'utf8')
@@ -22,6 +22,13 @@ test('build：@match、更新網址、主世界都有', () => {
   for (const m of manifest.content_scripts[0].matches) assert.ok(out.includes(`// @match        ${m}`))
   assert.ok(out.includes(`// @updateURL    ${RELEASE_URL}`))
   assert.ok(out.includes('// @grant        none'))
+})
+
+test('build：@author 與 package.json、LICENSE 一致', () => {
+  assert.ok(out.includes(`// @author       ${AUTHOR}`))
+  const pkg = JSON.parse(readFile('package.json'))
+  assert.equal(pkg.author, AUTHOR)
+  assert.match(readFile('LICENSE'), new RegExp(`Copyright \\(c\\) \\d{4} ${AUTHOR}\\r?\\n`))
 })
 
 test('build：產出是語法正確的 JavaScript', () => {
