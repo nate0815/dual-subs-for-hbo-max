@@ -1,0 +1,11 @@
+# 行尾規則：一律 LF（含工作目錄）。
+# hook 腳本與文件都在 Windows 與 Linux 之間搬，CRLF 混進來不會報錯，
+# 但 diff 會整份變紅，而且 .mjs/.toml 的行尾問題很難從症狀回推。
+*.md   text eol=lf
+*.js   text eol=lf
+*.mjs  text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.svg  text eol=lf
+.gitignore     text eol=lf
+.gitattributes text eol=lf
