@@ -22,13 +22,13 @@ The extension requests no permissions and collects or sends no data. Subtitles a
 1. Open HBO Max and play any episode.
 2. **Turn off HBO's own subtitles first**: in the player, click 💬 (bottom right) and set subtitles to **Off**.
    Otherwise HBO's subtitles will overlap with this tool's.
-3. After 1–3 seconds, two lines appear near the bottom: **white on top, yellow below**.
+3. After 1–3 seconds, two lines appear near the bottom: **yellow on top, white below**.
 
 ## 3. Changing languages
 
 1. Move the mouse so the player controls appear.
-2. To the **left** of 💬 (bottom right) there is this tool's button: a box with two bars, white over yellow.
-3. Click it to open two columns, **上排（白）** (top, white) and **下排（黃）** (bottom, yellow). Each lists every official subtitle track in this episode, plus 關閉 (Off).
+2. To the **left** of 💬 (bottom right) there is this tool's button: a box with two bars, yellow over white.
+3. Click it to open two columns, **上排（黃）** (top, yellow) and **下排（白）** (bottom, white). Each lists every official subtitle track in this episode, plus 關閉 (Off).
 4. Your choice applies immediately and is remembered **for every episode after this one**.
 5. If an episode doesn't have the language you picked, that line stays hidden; the tool never switches to a different language on its own.
 

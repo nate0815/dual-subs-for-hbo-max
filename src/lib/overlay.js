@@ -58,8 +58,8 @@
       boxSizing: 'border-box',
       transition: 'padding-bottom 0.2s ease', // 跟著控制列上下移動時平滑過渡
     })
-    const top = line('#ffffff')
-    const bottom = line('#ffe27a')
+    const top = line('#ffe27a') // 上排黃（DESIGN「顯示規則」）
+    const bottom = line('#ffffff') // 下排白
     el.append(top, bottom)
 
     /** on＝這一排有選語言（有軌）。有軌但此刻沒句子 → 保留一行空間、不顯示字，

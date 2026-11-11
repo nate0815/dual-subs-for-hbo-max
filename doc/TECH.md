@@ -155,7 +155,7 @@ node --test
 | 字級倍率範圍 0.5～2、步進 0.1 | `src/main.js`（快捷鍵處理） | 快捷鍵能調到多大多小 |
 | `FONT_RATIO`（0.04）、下排放大 1.1 | `src/lib/overlay.js` | 字級：影片高度的比例 |
 | `BOTTOM_PAD`（9%） | `src/lib/overlay.js` | 字幕離畫面下緣多遠，避開控制列 |
-| 上排白 `#ffffff`、下排黃 `#ffe27a` | `src/lib/overlay.js` | 兩行字的顏色 |
+| 上排黃 `#ffe27a`、下排白 `#ffffff` | `src/lib/overlay.js` | 兩行字的顏色 |
 | `LOOKBACK`（12） | `src/lib/vtt.js` | `activeAt` 往回看幾句，涵蓋重疊的句子 |
 
 ---

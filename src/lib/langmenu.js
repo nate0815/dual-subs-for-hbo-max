@@ -60,16 +60,16 @@
 
   /* ── DOM（只在瀏覽器裡呼叫） ─────────────────────────── */
 
-  // 兩條橫線，上白下黃 —— 跟疊加層兩排的顏色一致，一眼看得出是「雙字幕」
+  // 兩條橫線，上黃下白 —— 跟疊加層兩排的顏色一致，一眼看得出是「雙字幕」
   const ICON =
     '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">' +
     '<rect x="2" y="3" width="20" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/>' +
-    '<rect x="5.5" y="11" width="13" height="2.4" rx="1.2" fill="#ffffff"/>' +
-    '<rect x="7.5" y="15.2" width="9" height="2.4" rx="1.2" fill="#ffe27a"/></svg>'
+    '<rect x="5.5" y="11" width="13" height="2.4" rx="1.2" fill="#ffe27a"/>' +
+    '<rect x="7.5" y="15.2" width="9" height="2.4" rx="1.2" fill="#ffffff"/></svg>'
 
   const ROWS = [
-    ['top', '上排（白）'],
-    ['bottom', '下排（黃）'],
+    ['top', '上排（黃）'],
+    ['bottom', '下排（白）'],
   ]
 
   /** 吃掉事件，不讓它冒泡到 HBO 播放器 —— 否則點選單可能被當成「點影片＝暫停」。 */
