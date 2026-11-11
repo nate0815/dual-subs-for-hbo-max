@@ -127,7 +127,7 @@ node --test
 | 8 | `load` 要用遞增的票號丟棄過期結果 | `src/main.js` `load` | 快速換集時，慢回來的上一集字幕蓋掉新一集，字幕對不上 |
 | 9 | 字幕內容絕不持久化（不寫儲存、不寫檔、不印主控台、不進版控）。`state.cache` 只在記憶體、換集就清 | `src/main.js`、`test/` | 版權與帳號風險；也違反 [AGENTS.md](../AGENTS.md) 的紅線 |
 | 10 | 找 HBO 控制列只用 `data-testid`（錨點 `player-ux-track-selector-button`），**不用 class** | `src/lib/langmenu.js` `ANCHOR`／`findAnchor` | class 是 styled-components 雜湊，同頁就有兩組、改版就變：按鈕會插到錯的那組或直接找不到，畫面上只看到「浮動按鈕跑出來」 |
-| 11 | 語言按鈕與面板不可放進疊加層，且要吃掉滑鼠事件（`swallow`） | `src/lib/langmenu.js` `createLangMenu` | 放進疊加層 → 被 `pointer-events: none` 繼承，點不到；不吃事件 → 點選單冒泡到 HBO 播放器，被當成點影片而暫停 |
+| 11 | 語言按鈕、面板、快捷鍵提示（toast）都不可放進疊加層；按鈕與面板要吃掉滑鼠事件（`swallow`） | `src/lib/langmenu.js` `createLangMenu` | 放進疊加層 → 按鈕被 `pointer-events: none` 繼承，點不到；toast 跟著疊加層一起被隱藏，偏偏「雙字幕：關」正是疊加層隱藏時要看到的。不吃事件 → 點選單冒泡到 HBO 播放器，被當成點影片而暫停 |
 
 ---
 
@@ -218,4 +218,6 @@ node --test
 - （→ 模組契約）`langmenu.js`：`createLangMenu({ getView, onSelect })` 回傳 `{ button, panel, update(video, host), hide() }`。`getView()` 回 `{ status, tracks, top, bottom }`（`status`：`idle|loading|ready|error`；`top`／`bottom` 是目前挑中的軌物件或 `null`）。**誰能呼叫**：只有 `main.js`。**不能做什麼**：不抓字幕、不存設定（選了什麼交給 `onSelect`）。
 - （→ 模組契約）`main.js` 新增 `loadCues(ticket)`、`onSelect(row, track)`；`state` 新增 `status`、`topTrack`、`bottomTrack`、`cache`（軌網址 → 句子陣列）、`menu`。除錯時 `__HDS__.state.topTrack` 可看目前挑中哪條。
 - （→ 數值一覽）`FLOAT_AFTER_MS`（1500）：控制列消失多久才改用浮動按鈕；`FLOAT_IDLE_MS`（3000）：浮動按鈕在滑鼠停止多久後隱藏。都在 `src/lib/langmenu.js`，假值。
+- （→ 模組契約）`langmenu.js` 新增純函式 `formatOffset(offsetMs)`（快捷鍵提示文字，正值＝提早），與實例方法 `flash(text)`（影片上方中央顯示 `TOAST_MS` 後消失）。`getView()` 多回傳 `enabled`：關閉時按鈕 `opacity` 0.45、面板頂端顯示提示；面板底部固定列出 `HOTKEYS`。
+- （→ 數值一覽）`TOAST_MS`（1500）：快捷鍵提示顯示多久，`src/lib/langmenu.js`。
 - （→ ?）嵌入位置：按鈕插在字幕設定按鈕（💬）的**左邊**、尺寸複製該按鈕的 `offsetWidth/Height`。每個 tick 檢查，被 React 重繪掉就插回去。浮動按鈕貼在影片右下角（右 64px、下 120px）。

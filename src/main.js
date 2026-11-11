@@ -6,8 +6,16 @@
 ;(function () {
   'use strict'
 
-  const { parseVtt, activeAt, isMpdUrl, parseTextTracks, resolveTrack, createOverlay, createLangMenu } =
-    window.__HDS__
+  const {
+    parseVtt,
+    activeAt,
+    isMpdUrl,
+    parseTextTracks,
+    resolveTrack,
+    createOverlay,
+    createLangMenu,
+    formatOffset,
+  } = window.__HDS__
 
   const TAG = '[HDS]'
   const KEY = 'hds:settings'
@@ -145,6 +153,7 @@
       state.menu = createLangMenu({
         getView: () => ({
           status: state.status,
+          enabled: state.settings.enabled,
           tracks: state.tracks,
           top: state.topTrack,
           bottom: state.bottomTrack,
@@ -185,14 +194,22 @@
     (e) => {
       if (!e.altKey || !e.shiftKey) return
       const s = state.settings
-      if (e.code === 'KeyD') s.enabled = !s.enabled
-      else if (e.code === 'ArrowUp') s.fontScale = Math.min(2, +(s.fontScale + 0.1).toFixed(2))
-      else if (e.code === 'ArrowDown') s.fontScale = Math.max(0.5, +(s.fontScale - 0.1).toFixed(2))
-      else if (e.code === 'BracketLeft') s.offsetMs -= 100
-      else if (e.code === 'BracketRight') s.offsetMs += 100
-      else return
+      let msg
+      if (e.code === 'KeyD') {
+        s.enabled = !s.enabled
+        msg = '雙字幕：' + (s.enabled ? '開' : '關')
+      } else if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
+        const step = e.code === 'ArrowUp' ? 0.1 : -0.1
+        s.fontScale = Math.min(2, Math.max(0.5, +(s.fontScale + step).toFixed(2)))
+        msg = '字級 ×' + s.fontScale
+      } else if (e.code === 'BracketLeft' || e.code === 'BracketRight') {
+        s.offsetMs += e.code === 'BracketRight' ? 100 : -100
+        msg = formatOffset(s.offsetMs)
+      } else return
       e.preventDefault()
       saveSettings()
+      // 快捷鍵是本工具自己的，按了沒回饋會以為壞掉（DESIGN「快捷鍵」）
+      if (state.menu) state.menu.flash(msg)
       console.info(TAG, '設定', JSON.stringify(s))
     },
     true,

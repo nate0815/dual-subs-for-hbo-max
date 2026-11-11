@@ -21,6 +21,8 @@
   const FLOAT_AFTER_MS = 1500
   // 浮動按鈕：滑鼠停止移動這麼久後跟著隱藏（仿控制列）。假值。
   const FLOAT_IDLE_MS = 3000
+  // 快捷鍵提示顯示多久（DESIGN「快捷鍵」：約 1.5 秒）。
+  const TOAST_MS = 1500
 
   /* ── 純函式（node 可測） ─────────────────────────────── */
 
@@ -40,6 +42,21 @@
     const name = langName(track.lang)
     return track.role === 'caption' ? name + ' CC' : name
   }
+
+  /** 時間偏移的提示文字。offsetMs 正值＝字幕提早（與 main.js 的設定同義）。 */
+  function formatOffset(offsetMs) {
+    const sec = (Math.abs(offsetMs) / 1000).toFixed(1)
+    if (offsetMs > 0) return '字幕提早 ' + sec + ' 秒'
+    if (offsetMs < 0) return '字幕延後 ' + sec + ' 秒'
+    return '字幕時間：不偏移'
+  }
+
+  // 本工具自己的快捷鍵（DESIGN「快捷鍵」）。選單底部列出來 —— 不寫出來使用者不會知道。
+  const HOTKEYS = [
+    ['Alt+Shift+D', '開／關雙字幕'],
+    ['Alt+Shift+↑ / ↓', '字級大／小'],
+    ['Alt+Shift+[ / ]', '字幕延後／提早 0.1 秒'],
+  ]
 
   /* ── DOM（只在瀏覽器裡呼叫） ─────────────────────────── */
 
@@ -72,7 +89,7 @@
 
   /**
    * @param {object} o
-   * @param {() => {status:string, tracks:object[], top:object|null, bottom:object|null}} o.getView
+   * @param {() => {status:string, enabled:boolean, tracks:object[], top:object|null, bottom:object|null}} o.getView
    * @param {(row:'top'|'bottom', track:object|null) => void} o.onSelect
    */
   function createLangMenu({ getView, onSelect }) {
@@ -81,6 +98,9 @@
     let lastAnchorAt = Date.now() // 起算時當作剛看過控制列，給頁面一點時間長出來
     let lastMoveAt = 0
     let sig = ''
+    let lastHost = null
+    let lastVideo = null
+    let toastTimer = 0
 
     const button = document.createElement('button')
     button.id = BTN_ID
@@ -109,7 +129,8 @@
       position: 'fixed',
       zIndex: '2147483647',
       display: 'none',
-      gap: '28px',
+      flexDirection: 'column',
+      gap: '10px',
       padding: '14px 18px',
       background: 'rgba(16,16,16,0.94)',
       color: '#fff',
@@ -121,6 +142,24 @@
       overflowY: 'auto',
     })
     swallow(panel)
+
+    // 快捷鍵按下後的短暫提示。不吃滑鼠（pointer-events:none），也不放進疊加層 ——
+    // 疊加層在「關閉」時整個隱藏，但「雙字幕：關」這句正是那時候要看到的。
+    const toast = document.createElement('div')
+    toast.id = 'hds-toast'
+    Object.assign(toast.style, {
+      position: 'fixed',
+      zIndex: '2147483647',
+      display: 'none',
+      transform: 'translateX(-50%)',
+      padding: '8px 16px',
+      background: 'rgba(16,16,16,0.85)',
+      color: '#fff',
+      borderRadius: '6px',
+      font: '15px/1.4 "Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif',
+      pointerEvents: 'none',
+      whiteSpace: 'nowrap',
+    })
 
     window.addEventListener('mousemove', () => (lastMoveAt = Date.now()), { passive: true })
     // 點選單外面就關
@@ -179,6 +218,30 @@
 
     function render(view) {
       panel.textContent = ''
+      if (!view.enabled) {
+        const off = document.createElement('div')
+        off.textContent = '雙字幕目前關閉 —— 按 Alt+Shift+D 開啟'
+        Object.assign(off.style, { color: '#ffe27a', fontSize: '13px' })
+        panel.appendChild(off)
+      }
+      panel.appendChild(renderBody(view))
+      const foot = document.createElement('div')
+      Object.assign(foot.style, {
+        fontSize: '12px',
+        opacity: '0.6',
+        borderTop: '1px solid rgba(255,255,255,0.15)',
+        paddingTop: '8px',
+        lineHeight: '1.6',
+      })
+      for (const [key, what] of HOTKEYS) {
+        const line = document.createElement('div')
+        line.textContent = key + '　' + what
+        foot.appendChild(line)
+      }
+      panel.appendChild(foot)
+    }
+
+    function renderBody(view) {
       if (view.status !== 'ready' || !view.tracks.length) {
         const msg = document.createElement('div')
         msg.textContent =
@@ -187,9 +250,10 @@
             : view.status === 'ready'
               ? '這集沒有字幕軌'
               : '讀取中…'
-        panel.appendChild(msg)
-        return
+        return msg
       }
+      const cols = document.createElement('div')
+      Object.assign(cols.style, { display: 'flex', gap: '28px' })
       for (const [row, title] of ROWS) {
         const col = document.createElement('div')
         const h = document.createElement('div')
@@ -201,13 +265,14 @@
         for (const t of view.tracks) {
           col.appendChild(option(trackLabel(t), !!current && current.id === t.id, () => pick(row, t)))
         }
-        panel.appendChild(col)
+        cols.appendChild(col)
       }
+      return cols
     }
 
     function signature(view) {
       const id = (t) => (t ? t.id : '-')
-      return [view.status, view.tracks.map((t) => t.id).join(','), id(view.top), id(view.bottom)].join('|')
+      return [view.status, view.enabled, view.tracks.map((t) => t.id).join(','), id(view.top), id(view.bottom)].join('|')
     }
 
     function pick(row, track) {
@@ -245,6 +310,10 @@
        *  host：全螢幕時是 fullscreenElement，否則 body —— 跟疊加層同一個掛載點。 */
       update(video, host) {
         const now = Date.now()
+        lastHost = host
+        lastVideo = video
+        const opacity = getView().enabled ? '1' : '0.45' // 疊加層關閉時圖示變淡
+        if (button.style.opacity !== opacity) button.style.opacity = opacity
         const anchor = findAnchor()
         if (anchor) {
           lastAnchorAt = now
@@ -281,11 +350,25 @@
       hide() {
         if (open) close()
         if (mode === 'floating') button.style.display = 'none'
+        toast.style.display = 'none'
+      },
+      /** 在影片上方中央短暫顯示一句提示（快捷鍵的回饋）。 */
+      flash(text) {
+        const host = lastHost || document.body
+        if (!host) return
+        if (toast.parentElement !== host) host.appendChild(toast)
+        const r = lastVideo && lastVideo.isConnected ? lastVideo.getBoundingClientRect() : null
+        toast.style.left = (r ? r.left + r.width / 2 : window.innerWidth / 2) + 'px'
+        toast.style.top = (r ? r.top + r.height * 0.08 : 40) + 'px'
+        toast.textContent = text
+        toast.style.display = 'block'
+        clearTimeout(toastTimer)
+        toastTimer = setTimeout(() => (toast.style.display = 'none'), TOAST_MS)
       },
     }
   }
 
-  const api = { langName, trackLabel, createLangMenu }
+  const api = { langName, trackLabel, formatOffset, createLangMenu }
   if (typeof module !== 'undefined' && module.exports) module.exports = api
   else root.__HDS__ = Object.assign(root.__HDS__ || {}, api)
 })(typeof globalThis !== 'undefined' ? globalThis : this)
