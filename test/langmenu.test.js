@@ -7,6 +7,19 @@ test('langName：語言代碼轉繁中名稱', () => {
   assert.equal(langName('ja'), '日文')
 })
 
+test('langName：多餘的文字標記不重複顯示（HBO 日文軌是 ja-Jpan），地區保留', () => {
+  assert.equal(langName('ja-Jpan'), '日文')
+  assert.equal(langName('ja-Jpan-JP'), langName('ja-JP'))
+})
+
+test('langName：中文的繁體／簡體一律保留；非預設文字也保留', () => {
+  assert.equal(langName('zh-Hant-TW'), '中文（繁體，台灣）')
+  assert.match(langName('zh-Hans-SG'), /簡體/)
+  assert.match(langName('zh-Hant'), /繁體/)
+  // 塞爾維亞文預設是西里爾字母，拉丁字母版要分得出來
+  assert.notEqual(langName('sr-Latn'), langName('sr'))
+})
+
 test('langName：代碼不合法時退回代碼本身，空字串給「未知語言」，不拋錯', () => {
   assert.equal(langName('not a tag!'), 'not a tag!')
   assert.equal(langName(''), '未知語言')

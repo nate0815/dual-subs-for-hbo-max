@@ -233,3 +233,5 @@ node --test
 - （→ 驗證與回歸）實機驗收可由 Claude 透過 Claude in Chrome 做（2026-11-11 首次）：開分頁進播放頁 → `__HDS__.state` 看 `status`／軌／句數（**只讀數量，不讀字幕文字**）→ 截圖看顏色與位置 → 點選單、按快捷鍵、換集、全螢幕。「載入未封裝項目」與重新載入擴充功能在 `chrome://extensions`，只能由人操作。注意：頁面剛開時 `status` 可能還是 `idle` —— 播放器過幾秒才請求 `.mpd`，不是故障。
 - （→ 模組契約）`langmenu.js` 新增 `drawerOpen()`：`[data-testid="player_drawer"]` 存在且看得見（自身與祖先無 `display:none`／`visibility:hidden`／透明度 < 0.05）。面板**平常就在 DOM 裡**（關閉時 `visibility:hidden` ＋ `opacity:0`），所以不能只看存在。找不到 → `false`。`main.js` 的 tick 在面板打開時隱藏疊加層。判斷可見的邏輯抽成 `isShown(el)`，`findControls` 共用。
 - （→ ?）嵌入位置：按鈕插在字幕設定按鈕（💬）的**左邊**、尺寸複製該按鈕的 `offsetWidth/Height`。每個 tick 檢查，被 React 重繪掉就插回去。浮動按鈕貼在影片右下角（右 64px、下 120px）。
+- （→ 模組契約）`langmenu.js` 新增 `dropDefaultScript(lang)`（未匯出）：`langName` 先拿掉「該語言本來就用這種文字」的文字標記再交給 `Intl.DisplayNames`，例 `ja-Jpan` → `ja`（否則顯示「日文（日文）」）。中文一律保留繁體／簡體；非預設文字（例 `sr-Latn`）保留；地區永遠保留。
+- （→ 模組契約）`overlay.js` 兩排字幕元素設 `dir="auto"`：由右往左的語言（希伯來文、阿拉伯文）才排得對，見 [由右往左的字幕排版錯亂](gotchas/2026-11-11-由右往左的字幕排版錯亂.md)。
