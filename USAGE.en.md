@@ -10,6 +10,8 @@ Shows two **official** subtitle tracks at the same time on the HBO Max (Taiwan) 
 
 ## 1. Install
 
+<!-- Keep in sync with the 安裝 section of README.md -->
+
 Use **one** of the two methods, not both (otherwise you'll see two sets of subtitles).
 
 ### Method A: Tampermonkey (recommended, updates automatically)
@@ -47,6 +49,8 @@ Neither method needs any permissions, and the tool collects or sends no data. Su
 
 > If the controls can't be found (for example after an HBO redesign), the button appears as a round button floating at the bottom right of the video instead. It works the same way.
 
+When the player controls appear, the subtitles move up out of the way. While HBO's episode / "You may also like" panel is open, the subtitles are hidden; they come back when you close it.
+
 ## 4. Keyboard shortcuts
 
 These are **this tool's own shortcuts**, not HBO's. Each press briefly shows the current value at the top of the video; the list is also at the bottom of the language menu.
@@ -76,4 +80,4 @@ In this computer's Chrome (site data for `hbomax.com`). Clearing site data reset
 
 ---
 
-> A personal project with no affiliation to HBO or Warner Bros. Discovery. It may stop working when HBO changes its site.
+> An unofficial personal project with no affiliation to HBO or Warner Bros. Discovery. It may stop working when HBO changes its site. Please read the [disclaimer in the README](README.md#免責聲明) before use.
