@@ -7,8 +7,10 @@
 
   // 字級 = 影片高度 × 這個比例 × 使用者的 fontScale。假值，實機看了再調。
   const FONT_RATIO = 0.04
-  // 疊加層底部留給播放器控制列的空間（佔影片高度的比例）。假值。
-  const BOTTOM_PAD = '9%'
+  // 疊加層底部留給播放器控制列的空間（佔影片**高度**的比例）。假值。
+  // ⚠️ 不能寫成 CSS 的 paddingBottom:'9%' —— padding 的百分比是相對**寬度**算的，
+  //    寬螢幕上會變成高度的 18% 左右，字幕整個往上飄。要在 place() 裡用高度換算成 px。
+  const BOTTOM_PAD = 0.09
 
   function line(color) {
     const d = document.createElement('div')
@@ -41,7 +43,6 @@
       alignItems: 'center',
       justifyContent: 'flex-end',
       boxSizing: 'border-box',
-      paddingBottom: BOTTOM_PAD,
     })
     const top = line('#ffffff')
     const bottom = line('#ffe27a')
@@ -66,6 +67,7 @@
         el.style.top = r.top + 'px'
         el.style.width = r.width + 'px'
         el.style.height = r.height + 'px'
+        el.style.paddingBottom = r.height * BOTTOM_PAD + 'px'
         const base = r.height * FONT_RATIO * fontScale
         top.style.fontSize = base + 'px'
         bottom.style.fontSize = base * 1.1 + 'px'

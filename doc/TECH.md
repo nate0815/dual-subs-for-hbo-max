@@ -220,4 +220,5 @@ node --test
 - （→ 數值一覽）`FLOAT_AFTER_MS`（1500）：控制列消失多久才改用浮動按鈕；`FLOAT_IDLE_MS`（3000）：浮動按鈕在滑鼠停止多久後隱藏。都在 `src/lib/langmenu.js`，假值。
 - （→ 模組契約）`langmenu.js` 新增純函式 `formatOffset(offsetMs)`（快捷鍵提示文字，正值＝提早），與實例方法 `flash(text)`（影片上方中央顯示 `TOAST_MS` 後消失）。`getView()` 多回傳 `enabled`：關閉時按鈕 `opacity` 0.45、面板頂端顯示提示；面板底部固定列出 `HOTKEYS`。
 - （→ 數值一覽）`TOAST_MS`（1500）：快捷鍵提示顯示多久，`src/lib/langmenu.js`。
+- （→ 數值一覽）`BOTTOM_PAD` 改為比例數字 0.09，在 `place()` 依影片高度換算 px —— CSS 的 padding 百分比相對**寬度**，見 [字幕比規格高一倍](gotchas/2026-11-11-字幕比規格高一倍.md)。
 - （→ ?）嵌入位置：按鈕插在字幕設定按鈕（💬）的**左邊**、尺寸複製該按鈕的 `offsetWidth/Height`。每個 tick 檢查，被 React 重繪掉就插回去。浮動按鈕貼在影片右下角（右 64px、下 120px）。
