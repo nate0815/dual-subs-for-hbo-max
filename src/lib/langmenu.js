@@ -76,7 +76,7 @@
   const ICON =
     '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">' +
     '<circle cx="12" cy="12" r="11.5" fill="' + ICON_COLOR + '"/>' +
-    '<text x="12" y="16.6" text-anchor="middle" font-size="13.5" font-weight="900" fill="#fff" ' +
+    '<text x="12" y="12.5" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="900" fill="#fff" ' +
     'font-family="&quot;Noto Sans TC&quot;,&quot;Microsoft JhengHei&quot;,&quot;PingFang TC&quot;,sans-serif">雙</text></svg>'
 
   const ROWS = [
@@ -235,6 +235,7 @@
           height: '44px',
           borderRadius: '50%',
           background: 'rgba(0,0,0,0.55)',
+          margin: '0', // 嵌入時複製來的外距不能帶過來，否則會偏離 right/bottom 的定位
         })
       } else {
         Object.assign(button.style, {
@@ -374,6 +375,9 @@
           const h = anchor.offsetHeight + 'px'
           if (button.style.width !== w) button.style.width = w
           if (button.style.height !== h) button.style.height = h
+          // HBO 的按鈕四周有外距（實測 4px）；不複製的話我們的按鈕會比隔壁高、間距也不齊
+          const m = getComputedStyle(anchor).margin
+          if (button.style.margin !== m) button.style.margin = m
           if (button.style.display !== 'inline-flex') button.style.display = 'inline-flex'
         } else if (now - lastAnchorAt > FLOAT_AFTER_MS) {
           if (mode !== 'floating') setMode('floating')

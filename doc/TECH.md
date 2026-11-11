@@ -240,3 +240,4 @@ node --test
 - （→ 檔案清單）`doc/images/preview.svg`：README 開頭的示意圖，手寫 SVG（無相依）。畫面與台詞全是自製（DESIGN「商標與命名」：不能放劇的畫面）。**介面改了要跟著改**：顏色（上黃下白）、按鈕圖示、選單欄位與快捷鍵文字都是照 `overlay.js`／`langmenu.js` 畫的。預覽方式：Chrome 不讓 Claude in Chrome 開 `file://`，要用本機暫時的 HTTP 伺服器開。
 - （→ 模組契約）`langmenu.js` 的按鈕圖示改為珊瑚紅實心圓＋白色「雙」（DESIGN v0.12「按鈕外觀」）：`ICON_COLOR`（`#ff5a4e`，假值）、SVG 26×26。「雙」是 SVG `<text>`，字型清單寫在屬性裡（中文字型優先）。疊加層關閉時整顆按鈕 `opacity` 0.45 的規則不變。
 - （→ 數值一覽）`ICON_COLOR`（`#ff5a4e`）：語言按鈕圓底顏色，`src/lib/langmenu.js`，假值。`doc/images/preview.svg` 用同一個色碼，改了要一起改。
+- （→ 模組契約）嵌入模式下，語言按鈕每個 tick 複製錨點（💬 按鈕）的 `width`／`height`／`margin`；浮動模式 `margin` 歸零。只複製寬高會比隔壁高 4px（HBO 按鈕有 `margin: 4px`）。
