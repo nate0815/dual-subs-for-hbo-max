@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "HBO Max 雙字幕（自用）",
+  "name": "雙字幕 for HBO Max（非官方）",
   "version": "0.1.0",
-  "description": "在 HBO Max 播放頁同時顯示官方英文 CC 與繁體中文字幕。個人使用。",
+  "description": "在 HBO Max 播放頁同時顯示兩條官方字幕。非官方工具，與 HBO 無關",
   "minimum_chrome_version": "111",
   "content_scripts": [
     {
@@ -11,6 +11,7 @@
         "src/lib/vtt.js",
         "src/lib/mpd.js",
         "src/lib/overlay.js",
+        "src/lib/langmenu.js",
         "src/main.js"
       ],
       "run_at": "document_start",

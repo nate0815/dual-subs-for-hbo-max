@@ -2,8 +2,9 @@
   "name": "hbo-dual-subs",
   "version": "0.1.0",
   "private": true,
-  "description": "HBO Max 雙字幕 Chrome 擴充功能（自用）。沒有 build step、沒有相依套件。",
+  "description": "雙字幕 for HBO Max（非官方）Chrome 擴充功能。開發不需要 build；發佈竄改猴版時用零相依的串接腳本（npm run build）。",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "build": "node scripts/build-userscript.mjs"
   }
 }

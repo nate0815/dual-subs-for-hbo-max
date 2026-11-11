@@ -1,6 +1,6 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
-const { isMpdUrl, parseTextTracks, pickTrack } = require('../src/lib/mpd.js')
+const { isMpdUrl, parseTextTracks, pickTrack, resolveTrack } = require('../src/lib/mpd.js')
 
 // 結構照 2026-11-11 對 HBO Max 台灣版實測到的清單檔，網址與簽章都是編的。
 const BASE = 'https://cdn.example.test/abc-123/fallback.mpd?token=x'
@@ -62,4 +62,34 @@ test('pickTrack：前綴依序嘗試、不分大小寫、都沒有回 null', () 
   assert.equal(pickTrack(tracks, ['zh-hant', 'zh']).id, 't1')
   assert.equal(pickTrack(tracks, ['ja', 'zh']).id, 't1') // 先找日文沒有，退到中文
   assert.equal(pickTrack(tracks, ['ja']), null)
+})
+
+test('resolveTrack：陣列＝預設值，照 pickTrack 的前綴規則', () => {
+  const tracks = parseTextTracks(MPD, BASE)
+  assert.equal(resolveTrack(tracks, ['zh-hant', 'zh']).id, 't1')
+})
+
+test('resolveTrack：{lang, role}＝使用者選的，語言要完全相同、優先同角色', () => {
+  const tracks = [
+    { id: 'a', lang: 'en-US', role: 'subtitle' },
+    { id: 'b', lang: 'en-US', role: 'caption' },
+    { id: 'c', lang: 'zh-Hant-TW', role: 'subtitle' },
+  ]
+  assert.equal(resolveTrack(tracks, { lang: 'en-US', role: 'caption' }).id, 'b')
+  assert.equal(resolveTrack(tracks, { lang: 'EN-us', role: 'caption' }).id, 'b') // 不分大小寫
+  assert.equal(resolveTrack(tracks, { lang: 'en-US', role: 'forced' }).id, 'a') // 沒有同角色 → 同語言第一條
+})
+
+test('resolveTrack：選的語言這集沒有 → null，不退到別的語言', () => {
+  const tracks = parseTextTracks(MPD, BASE)
+  assert.equal(resolveTrack(tracks, { lang: 'zh-Hant', role: 'subtitle' }), null) // 只有 zh-Hant-TW，不算
+  assert.equal(resolveTrack(tracks, { lang: 'ja', role: 'subtitle' }), null)
+})
+
+test('resolveTrack：null／壞掉的設定值＝關閉', () => {
+  const tracks = parseTextTracks(MPD, BASE)
+  assert.equal(resolveTrack(tracks, null), null)
+  assert.equal(resolveTrack(tracks, undefined), null)
+  assert.equal(resolveTrack(tracks, { role: 'caption' }), null)
+  assert.equal(resolveTrack(tracks, 'en'), null)
 })
