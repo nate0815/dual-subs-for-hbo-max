@@ -61,10 +61,9 @@
       <path d="M988 634 h6 l8 -7 v26 l-8 -7 h-6 Z" fill="#fff" stroke="none"/>
       <path d="M1008 633 a8 8 0 0 1 0 14"/>
     </g>
-    <g transform="translate(1036 626)">
-      <rect x="2" y="1" width="26" height="26" rx="4" fill="none" stroke="#fff" stroke-width="2.2"/>
-      <rect x="6.5" y="12" width="17" height="3.2" rx="1.6" fill="#ffe27a"/>
-      <rect x="9" y="18" width="12" height="3.2" rx="1.6" fill="#fff"/>
+    <g transform="translate(1036 625)">
+      <circle cx="15" cy="15" r="15" fill="#ff5a4e"/>
+      <text class="t" x="15" y="21.5" font-size="18" font-weight="900" fill="#fff" text-anchor="middle">雙</text>
     </g>
     <g class="ico">
       <rect x="1088" y="628" width="26" height="22" rx="4"/>

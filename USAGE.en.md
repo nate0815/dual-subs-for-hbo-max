@@ -42,7 +42,7 @@ Neither method needs any permissions, and the tool collects or sends no data. Su
 ## 3. Changing languages
 
 1. Move the mouse so the player controls appear.
-2. To the **left** of 💬 (bottom right) there is this tool's button: a box with two bars, yellow over white.
+2. To the **left** of 💬 (bottom right) there is this tool's button: a red circle with the white character 「雙」 ("dual").
 3. Click it to open two columns, **上排（黃）** (top, yellow) and **下排（白）** (bottom, white). Each lists every official subtitle track in this episode, plus 關閉 (Off).
 4. Your choice applies immediately and is remembered **for every episode after this one**.
 5. If an episode doesn't have the language you picked, that line stays hidden; the tool never switches to a different language on its own.
