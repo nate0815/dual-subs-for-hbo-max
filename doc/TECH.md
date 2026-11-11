@@ -60,12 +60,13 @@ node --test
 | `id` | string | 清單檔內 `Representation` 的 id |
 | `lang` | string | 例 `en-US`、`zh-Hant-TW` |
 | `role` | string | 例 `caption`、`subtitle`；沒有則為空字串 |
-| `segments` | number | 分段數；v0.1 只會處理第一段 |
-| `url` | string | **已解析成絕對網址**，`&amp;` 已還原，`$Number$` 已代入 `startNumber` |
+| `segments` | number | **同一 Period 內**的分段數（`<S>` 數）；每段只讀第一個 |
+| `urls` | string[] | 這條軌在**每個 Period** 的字幕檔網址，依 Period 順序；只有一段時長度 1。同一 Period 內語言＋角色相同的第 n 條，與其他 Period 的第 n 條合併 |
+| `url` | string | 等於 `urls[0]`。**已解析成絕對網址**，`&amp;` 已還原，`$Number$` 已代入 `startNumber` |
 
 **句子**（`parseVtt` 的輸出，依開始時間遞增）：`{ start: number, end: number, text: string }`，單位秒；`text` 已去掉標籤與實體，可含換行。
 
-**設定**（`localStorage['hds:settings']`，JSON）：`{ enabled, top, bottom, fontScale, offsetMs }`。缺的欄位用預設值補，壞掉的 JSON 退回預設。
+**設定**（`localStorage['hds:settings']`，JSON）：`{ enabled, top, bottom, fontScale, offsetMs }`。缺的欄位用預設值補，壞掉的 JSON 退回預設。`top`／`bottom` 是預設前綴陣列時**不存**、載入時也丟掉（舊版存過的），讓預設改了能對所有人生效。
 
 ---
 
@@ -129,6 +130,7 @@ node --test
 | 10 | 找 HBO 控制列只用 `data-testid`（錨點 `player-ux-track-selector-button`），**不用 class** | `src/lib/langmenu.js` `ANCHOR`／`findAnchor` | class 是 styled-components 雜湊，同頁就有兩組、改版就變：按鈕會插到錯的那組或直接找不到，畫面上只看到「浮動按鈕跑出來」 |
 | 11 | 語言按鈕、面板、快捷鍵提示（toast）都不可放進疊加層；按鈕與面板要吃掉滑鼠事件（`swallow`） | `src/lib/langmenu.js` `createLangMenu` | 放進疊加層 → 按鈕被 `pointer-events: none` 繼承，點不到；toast 跟著疊加層一起被隱藏，偏偏「雙字幕：關」正是疊加層隱藏時要看到的。不吃事件 → 點選單冒泡到 HBO 播放器，被當成點影片而暫停 |
 | 12 | 發佈時 `manifest.json` 的 `version` 一定要 bump，且 Release 附件檔名一定是 `hds.user.js` | `manifest.json`、`scripts/build-userscript.mjs` `RELEASE_URL` | 竄改猴比對 `@version` 判斷有沒有新版：沒 bump → 使用者永遠停在舊版；檔名不對 → 更新網址 404。**兩者都不會有任何錯誤訊息** |
+| 13 | 一條軌的字幕要讀**所有 Period** 的字幕檔（`track.urls`）並合併；各段時間碼是整集絕對時間，**不平移** | `src/lib/mpd.js` `parseTextTracks`、`src/main.js` `fetchCues`、`src/lib/vtt.js` `mergeCues` | 只讀第一段 → 分段的集數播到一半之後沒有字幕，**沒有任何錯誤**；平移 → 後段字幕整體錯位。見 [分段清單檔後半集沒有字幕](gotchas/2026-11-11-分段清單檔後半集沒有字幕.md) |
 
 ---
 
@@ -175,7 +177,7 @@ node --test
 
 | 沒做 | 為什麼 |
 |---|---|
-| 多分段字幕（只讀第一段） | 實測整集只有一段；沒看過多分段的實例就不憑空設計。遇到會在主控台警告 |
+| 同一 Period 內的多分段（每段只讀第一個 `<S>`） | 實測整集只有一段；沒看過多分段的實例就不憑空設計。遇到會在主控台警告 |
 | 自動隱藏原生字幕 | 要依賴 HBO 的頁面結構，改版就壞；先請使用者手動關 |
 | 字幕下載、單字查詢、AI 翻譯 | 超出範圍，見 [DESIGN.md](DESIGN.md)「明確不驗證什麼」 |
 | HBO Max 以外的平台 | 同上 |
