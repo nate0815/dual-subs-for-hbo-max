@@ -204,4 +204,6 @@ node --test
 
 ### 10.2 目前收件匣
 
-（空）
+- （→ 檔案清單）`dev/hds.user.js`：竄改猴轉接腳本，開發用。`@require file:///` 依 manifest 順序讀四個原始檔，`@grant none`（等同主世界）、`@run-at document-start`。需開啟竄改猴的「允許存取檔案網址」。
+- （→ 驗證與回歸）開發時用竄改猴：改完存檔 → 重新整理 HBO 頁面即生效，不必到 `chrome://extensions` 重新載入。**與未封裝擴充功能二選一**；注入可能比原生內容腳本晚，靠 `PerformanceObserver` 的 `buffered: true` 補回（資源紀錄緩衝區預設 250 筆），所以驗收仍要用未封裝跑一次。
+- （→ ?）DESIGN v0.3 的語言選單與語言自選**尚未實作**：目前程式仍是 `DEFAULTS.top`／`DEFAULTS.bottom` 寫死、沒有選單。實作時本節「怎麼加一個新的語言組合」要跟著改寫。
