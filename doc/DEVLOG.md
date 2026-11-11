@@ -235,7 +235,7 @@ code: []
 | 9 | 不經商店的分享管道（私下給 zip、私人 repo 邀請等） | 決定別人怎麼安裝與更新 | **2026-11-11 結論**：公開 GitHub repo ＋ Releases 發佈竄改猴腳本，見 [公開repo並以Releases發佈竄改猴腳本](decisions/2026-11-11-公開repo並以Releases發佈竄改猴腳本.md) |
 | 10 | HBO 控制列的 DOM 長什麼樣、用什麼選擇器嵌入最穩 | 語言按鈕嵌入的前提 | **2026-11-11 結論**：錨點用 `button[data-testid="player-ux-track-selector-button"]`，其 `parentElement` 是右下群組；不用 class（同頁就有兩組雜湊），見 [同一頁有兩組控制列class雜湊不同](gotchas/2026-11-11-同一頁有兩組控制列class雜湊不同.md) 與當天 devlog |
 | 11 | 中文字幕比英文慢一點出現：是固定延遲還是逐句不同 | 決定要不要做下排單獨偏移，或碰到「不逐句配對」決策 | **2026-11-11 結論**：修掉「排的跳動」後 Nate 體感已改善，未量測、暫不處理。之前的「慢」可能部分是上排被推動造成的錯覺。再遇到時用當天 devlog 的量測腳本先量 |
-| 12 | HBO 的「集數／您可能也會喜歡」面板打開時，我們的字幕疊在面板上、擋住集數說明 | 只有控制列會讓字幕讓開；這個面板（`data-testid="content_discovery"`／`player_drawer`）不在偵測範圍 | 待 Nate 決定：面板打開時隱藏字幕，還是讓到面板上方（2026-11-11 驗收發現） |
+| 12 | HBO 的「集數／您可能也會喜歡」面板打開時，我們的字幕疊在面板上、擋住集數說明 | 只有控制列會讓字幕讓開；這個面板（`data-testid="content_discovery"`／`player_drawer`）不在偵測範圍 | **2026-11-11 結論**：面板打開時隱藏字幕（DESIGN v0.10「HBO 選集面板打開時」），`langmenu.js` 的 `drawerOpen()` 偵測 |
 
 ---
 

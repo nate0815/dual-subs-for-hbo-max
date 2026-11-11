@@ -16,6 +16,7 @@
     createLangMenu,
     formatOffset,
     findControls,
+    drawerOpen,
   } = window.__HDS__
 
   const TAG = '[HDS]'
@@ -178,7 +179,8 @@
     // 語言按鈕不受「開關」影響：關掉疊加層時，仍要能從按鈕改語言
     state.menu.update(video, host)
 
-    if (!s.enabled || (!state.top.length && !state.bottom.length)) {
+    // 選集面板打開時不顯示字幕，免得擋住集數說明（DESIGN「HBO 選集面板打開時」）
+    if (!s.enabled || drawerOpen() || (!state.top.length && !state.bottom.length)) {
       ov.show(false)
       return
     }

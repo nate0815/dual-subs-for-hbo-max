@@ -54,7 +54,7 @@ test('startup：照 manifest 順序執行全部內容腳本，不拋例外', () 
   }
   const hds = win.__HDS__
   assert.ok(hds, '__HDS__ 要存在')
-  for (const name of ['parseVtt', 'activeAt', 'parseTextTracks', 'resolveTrack', 'createOverlay', 'createLangMenu', 'findControls', 'formatOffset', 'bottomPad']) {
+  for (const name of ['parseVtt', 'activeAt', 'parseTextTracks', 'resolveTrack', 'createOverlay', 'createLangMenu', 'findControls', 'drawerOpen', 'formatOffset', 'bottomPad']) {
     assert.equal(typeof hds[name], 'function', `__HDS__.${name} 要是函式`)
   }
   assert.ok(hds.state, 'main.js 要掛上 __HDS__.state（代表它跑完了）')

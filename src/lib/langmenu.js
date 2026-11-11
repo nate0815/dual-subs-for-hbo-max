@@ -87,6 +87,23 @@
     return null
   }
 
+  /** 元素與它的祖先都看得見（沒有 display:none／visibility:hidden／幾乎透明）。 */
+  function isShown(el) {
+    for (let e = el; e && e !== document.body; e = e.parentElement) {
+      const cs = getComputedStyle(e)
+      if (cs.display === 'none' || cs.visibility === 'hidden' || Number(cs.opacity) < 0.05) return false
+    }
+    return true
+  }
+
+  /** HBO 的「集數／您可能也會喜歡」面板是否打開（DESIGN「HBO 選集面板打開時」）。
+   *  面板平常就在 DOM 裡，只是 visibility:hidden ＋ opacity:0，所以要看樣式不能只看存在。
+   *  找不到 → false（照常顯示字幕，不因改版而把字幕藏掉）。 */
+  function drawerOpen() {
+    const d = document.querySelector('[data-testid="player_drawer"]')
+    return !!d && isShown(d)
+  }
+
   let controlsSeen = false
   /** 控制列的位置與是否看得見 → { top, visible }；從沒看過控制列則回 null（呼叫端退回固定留白）。
    *  給疊加層決定字幕要不要讓開（DESIGN「底部留白」）。放在這裡是因為它跟語言按鈕一樣依賴 HBO 頁面結構。
@@ -96,12 +113,7 @@
     const footer = anchor && anchor.closest('[data-testid="control_footer"]')
     if (!footer) return controlsSeen ? { top: 0, visible: false } : null
     controlsSeen = true
-    for (let e = footer; e && e !== document.body; e = e.parentElement) {
-      const cs = getComputedStyle(e)
-      if (cs.display === 'none' || cs.visibility === 'hidden' || Number(cs.opacity) < 0.05) {
-        return { top: 0, visible: false }
-      }
-    }
+    if (!isShown(footer)) return { top: 0, visible: false }
     return { top: footer.getBoundingClientRect().top, visible: true }
   }
 
@@ -395,7 +407,7 @@
     }
   }
 
-  const api = { langName, trackLabel, formatOffset, createLangMenu, findControls }
+  const api = { langName, trackLabel, formatOffset, createLangMenu, findControls, drawerOpen }
   if (typeof module !== 'undefined' && module.exports) module.exports = api
   else root.__HDS__ = Object.assign(root.__HDS__ || {}, api)
 })(typeof globalThis !== 'undefined' ? globalThis : this)
