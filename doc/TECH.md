@@ -227,4 +227,6 @@ node --test
 - （→ 檔案清單）`scripts/build-userscript.mjs`：發佈用，照 `manifest.json` 的 `content_scripts[0].js` 順序串成 `dist/hds.user.js`（gitignore）；`@version`／`@match` 取自 manifest，`@updateURL`／`@downloadURL` 指向 `releases/latest/download/hds.user.js`。匯出純函式 `buildUserscript(manifest, readFile)`，`test/build.test.mjs` 測順序、版本、語法。開發不用跑。
 - （→ 驗證與回歸）發佈前：`npm test && npm run build`；發佈後用一個沒裝開發版的 Chrome 設定檔，從 Release 連結安裝實測一次。步驟見 AGENTS「tag」。
 - （→ 驗證與回歸）`test/startup.test.js`：在 `node:vm` 的假瀏覽器環境裡照 manifest 順序實際執行全部內容腳本，確認不拋例外、`__HDS__` 介面齊全、觀察器／計時器／快捷鍵都有掛上；另有一項故意打亂順序、確認會失敗。守的是「不變式」第 1 條（順序錯了在瀏覽器裡是靜默沒字幕）。**不驗證畫面**。
+- （→ 模組契約）`langmenu.js` 的 `Esc` 監聽在**捕獲階段**（`addEventListener(..., true)`），選單開著時 `stopPropagation`：播放中 HBO 播放器會先吃掉 `Esc`，冒泡階段收不到；不攔的話全螢幕下按 `Esc` 會連全螢幕一起退出。
+- （→ 驗證與回歸）實機驗收可由 Claude 透過 Claude in Chrome 做（2026-11-11 首次）：開分頁進播放頁 → `__HDS__.state` 看 `status`／軌／句數（**只讀數量，不讀字幕文字**）→ 截圖看顏色與位置 → 點選單、按快捷鍵、換集、全螢幕。「載入未封裝項目」與重新載入擴充功能在 `chrome://extensions`，只能由人操作。注意：頁面剛開時 `status` 可能還是 `idle` —— 播放器過幾秒才請求 `.mpd`，不是故障。
 - （→ ?）嵌入位置：按鈕插在字幕設定按鈕（💬）的**左邊**、尺寸複製該按鈕的 `offsetWidth/Height`。每個 tick 檢查，被 React 重繪掉就插回去。浮動按鈕貼在影片右下角（右 64px、下 120px）。

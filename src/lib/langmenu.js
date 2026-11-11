@@ -188,9 +188,18 @@
       },
       true
     )
-    window.addEventListener('keydown', (e) => {
-      if (open && e.key === 'Escape') close()
-    })
+    // 捕獲階段：播放中 HBO 播放器會先吃掉 Esc（實機驗收時發現冒泡階段收不到）。
+    // 選單開著時 Esc 只關選單、不往下傳 —— 否則全螢幕下按 Esc 會連全螢幕一起退出。
+    window.addEventListener(
+      'keydown',
+      (e) => {
+        if (open && e.key === 'Escape') {
+          e.stopPropagation()
+          close()
+        }
+      },
+      true
+    )
 
     function setMode(m) {
       mode = m
