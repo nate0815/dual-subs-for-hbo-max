@@ -226,4 +226,5 @@ node --test
 - （→ 模組契約）`langmenu.js` 新增 `findControls()` → `{ top, visible }` 或 `null`（從沒看過控制列）。看過之後找不到一律當「收起」，因為 HBO 收起控制列可能是淡出也可能整個拔掉。`main.js` 每個 tick 把它傳給 `place`。
 - （→ 檔案清單）`scripts/build-userscript.mjs`：發佈用，照 `manifest.json` 的 `content_scripts[0].js` 順序串成 `dist/hds.user.js`（gitignore）；`@version`／`@match` 取自 manifest，`@updateURL`／`@downloadURL` 指向 `releases/latest/download/hds.user.js`。匯出純函式 `buildUserscript(manifest, readFile)`，`test/build.test.mjs` 測順序、版本、語法。開發不用跑。
 - （→ 驗證與回歸）發佈前：`npm test && npm run build`；發佈後用一個沒裝開發版的 Chrome 設定檔，從 Release 連結安裝實測一次。步驟見 AGENTS「tag」。
+- （→ 驗證與回歸）`test/startup.test.js`：在 `node:vm` 的假瀏覽器環境裡照 manifest 順序實際執行全部內容腳本，確認不拋例外、`__HDS__` 介面齊全、觀察器／計時器／快捷鍵都有掛上；另有一項故意打亂順序、確認會失敗。守的是「不變式」第 1 條（順序錯了在瀏覽器裡是靜默沒字幕）。**不驗證畫面**。
 - （→ ?）嵌入位置：按鈕插在字幕設定按鈕（💬）的**左邊**、尺寸複製該按鈕的 `offsetWidth/Height`。每個 tick 檢查，被 React 重繪掉就插回去。浮動按鈕貼在影片右下角（右 64px、下 120px）。
